@@ -22,3 +22,7 @@ const val createSongsTableQuery: String =
             "$SPOTIFY_URL_COLUMN string, " +
             "$IMAGE_URL_COLUMN string" +
             "$RELEASE_DATE_PRECISION_COLUMN string)"
+
+const val upgradeSongsTableQuery: String =
+    "ALTER TABLE $SONGS_TABLE ADD COLUMN "+
+            "$RELEASE_DATE_PRECISION_COLUMN string"
