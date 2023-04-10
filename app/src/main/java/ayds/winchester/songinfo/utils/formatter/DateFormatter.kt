@@ -6,6 +6,7 @@ interface DateFormatter{
 
 class DateFormatterImpl:DateFormatter{
     override fun format(date: String, precision: String): String {
-        TODO("Not yet implemented")
+        val formatter = PrecisionFormatterFactory.getPrecisionFormatter(precision)
+        return formatter.formatWithPrecision(date)
     }
 }
