@@ -1,11 +1,14 @@
 package ayds.winchester.songinfo.home.view.formatter
 
-object PrecisionFormatterFactory {
-    //Crear Enumerado
-    fun getPrecisionFormatter(precision:String): PrecisionFormatter =
+interface PrecisionFormatterFactory{
+    fun get(precision: String): PrecisionFormatter
+}
+object PrecisionFormatterFactoryImpl:PrecisionFormatterFactory {
+    override fun get(precision: String): PrecisionFormatter =
         when(precision) {
             "year" -> YearFormatter()
             "month" -> MonthFormatter()
-            else -> DayFormatter()
+            "day" -> DayFormatter()
+            else -> DefaultFormatter()
         }
 }
