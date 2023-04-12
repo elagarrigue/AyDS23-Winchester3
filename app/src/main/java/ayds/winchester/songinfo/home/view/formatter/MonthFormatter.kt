@@ -9,6 +9,9 @@ class MonthFormatter: PrecisionFormatter() {
         return "$monthName, $year"
     }
 
+
+    private fun getMonthSubstring(date: String) = date.substring(5..6)
+
     private fun getMonthName(monthNumber:String) =
         when(monthNumber){
             "01" -> "January"

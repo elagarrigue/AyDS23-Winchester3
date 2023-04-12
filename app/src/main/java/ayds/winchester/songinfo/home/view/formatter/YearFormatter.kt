@@ -9,4 +9,5 @@ class YearFormatter: PrecisionFormatter() {
 
     private fun isLeapYear(year:Int) = (year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0))
 
+    private fun getYearSubstring(date: String) = date.take(4)
 }
