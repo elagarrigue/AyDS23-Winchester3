@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.utils.formatter
+package ayds.winchester.songinfo.home.view.formatter
 
 abstract class PrecisionFormatter{
     abstract fun formatWithPrecision(date:String):String

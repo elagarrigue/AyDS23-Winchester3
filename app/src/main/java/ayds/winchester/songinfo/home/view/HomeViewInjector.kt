@@ -2,7 +2,7 @@ package ayds.winchester.songinfo.home.view
 
 import ayds.winchester.songinfo.home.controller.HomeControllerInjector
 import ayds.winchester.songinfo.home.model.HomeModelInjector
-import ayds.winchester.songinfo.utils.formatter.DateFormatterImpl
+import ayds.winchester.songinfo.home.view.formatter.DateFormatterImpl
 
 object HomeViewInjector {
 

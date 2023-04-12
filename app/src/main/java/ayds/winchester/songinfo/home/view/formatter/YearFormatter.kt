@@ -1,6 +1,6 @@
-package ayds.winchester.songinfo.utils.formatter
+package ayds.winchester.songinfo.home.view.formatter
 
-class YearFormatter:PrecisionFormatter() {
+class YearFormatter: PrecisionFormatter() {
     override fun formatWithPrecision(date: String): String =
         if (isLeapYear(date.toInt()))
             "$date (leap year)"

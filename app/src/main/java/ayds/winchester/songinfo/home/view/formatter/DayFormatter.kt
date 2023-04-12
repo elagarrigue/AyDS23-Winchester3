@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.utils.formatter
+package ayds.winchester.songinfo.home.view.formatter
 
 
 class DayFormatter: PrecisionFormatter() {

@@ -1,8 +1,8 @@
-package ayds.winchester.songinfo.utils.formatter
+package ayds.winchester.songinfo.home.view.formatter
 
 object PrecisionFormatterFactory {
     //Crear Enumerado
-    fun getPrecisionFormatter(precision:String):PrecisionFormatter =
+    fun getPrecisionFormatter(precision:String): PrecisionFormatter =
         when(precision) {
             "year" -> YearFormatter()
             "month" -> MonthFormatter()
