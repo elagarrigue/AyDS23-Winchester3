@@ -3,16 +3,12 @@ package ayds.winchester.songinfo.home.view.formatter
 class MonthFormatter: PrecisionFormatter {
 
     override fun formatWithPrecision(date:String):String{
-        val year = getYearSubstring(date)
-        val monthNumber = getMonthSubstring(date)
+        val year = date.split("-")[0]
+        val monthNumber = date.split("-")[1]
         val monthName = getMonthName(monthNumber)
         return "$monthName, $year"
     }
 
-
-    private fun getMonthSubstring(date: String) = date.substring(5..6)
-
-    private fun getYearSubstring(date: String) = date.take(4)
     private fun getMonthName(monthNumber:String) =
         when(monthNumber){
             "01" -> "January"
@@ -29,5 +25,4 @@ class MonthFormatter: PrecisionFormatter {
             "12" -> "December"
             else -> ""
         }
-
 }

@@ -31,11 +31,8 @@ internal class HomeControllerImpl(
             }
         }
 
-
     private fun searchSong() {
-
         // Warning: Never use Thread in android! Use coroutines
-        // WHY IS HERE ?!
         Thread {
             homeModel.searchSong(homeView.uiState.searchTerm)
         }.start()

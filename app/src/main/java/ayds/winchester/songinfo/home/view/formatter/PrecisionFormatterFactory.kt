@@ -1,14 +1,19 @@
 package ayds.winchester.songinfo.home.view.formatter
 
 interface PrecisionFormatterFactory{
-    fun get(precision: String): PrecisionFormatter
+    fun getPrecisionFormatter(precision: String): PrecisionFormatter
 }
+
+private const val YEAR = "year"
+private const val MONTH = "month"
+private const val DAY = "day"
+
 object PrecisionFormatterFactoryImpl:PrecisionFormatterFactory {
-    override fun get(precision: String): PrecisionFormatter =
+    override fun getPrecisionFormatter(precision: String): PrecisionFormatter =
         when(precision) {
-            "year" -> YearFormatter()
-            "month" -> MonthFormatter()
-            "day" -> DayFormatter()
+            YEAR -> YearFormatter()
+            MONTH -> MonthFormatter()
+            DAY -> DayFormatter()
             else -> DefaultFormatter()
         }
 }

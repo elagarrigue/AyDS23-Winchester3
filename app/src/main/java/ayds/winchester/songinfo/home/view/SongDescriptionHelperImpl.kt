@@ -25,5 +25,5 @@ internal class SongDescriptionHelperImpl(private val dateFormatterFactory: Preci
     }
 
     private fun SpotifySong.getFormattedReleaseDate() =
-        dateFormatterFactory.get(this.releaseDatePrecision).formatWithPrecision(this.releaseDate)
+        dateFormatterFactory.getPrecisionFormatter(this.releaseDatePrecision).formatWithPrecision(this.releaseDate)
 }
