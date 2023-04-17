@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import ayds.winchester.songinfo.home.model.entities.Song.SpotifySong
 import ayds.winchester.songinfo.home.model.repository.local.spotify.SpotifyLocalStorage
 
-private const val DATABASE_VERSION = 1
+private const val DATABASE_VERSION = 2
 private const val DATABASE_NAME = "songs.db"
 
 internal class SpotifyLocalStorageImpl(
@@ -24,14 +24,19 @@ internal class SpotifyLocalStorageImpl(
         ALBUM_COLUMN,
         RELEASE_DATE_COLUMN,
         SPOTIFY_URL_COLUMN,
-        IMAGE_URL_COLUMN
+        IMAGE_URL_COLUMN,
+        RELEASE_DATE_PRECISION_COLUMN
     )
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createSongsTableQuery)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (newVersion > oldVersion) {
+            db.execSQL(upgradeSongsTableQuery)
+        }
+    }
 
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         onUpgrade(db, oldVersion, newVersion)
@@ -55,6 +60,7 @@ internal class SpotifyLocalStorageImpl(
             put(RELEASE_DATE_COLUMN, song.releaseDate)
             put(SPOTIFY_URL_COLUMN, song.spotifyUrl)
             put(IMAGE_URL_COLUMN, song.imageUrl)
+            put(RELEASE_DATE_PRECISION_COLUMN,song.releaseDatePrecision)
         }
 
         writableDatabase?.insert(SONGS_TABLE, null, values)
