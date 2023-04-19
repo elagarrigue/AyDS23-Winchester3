@@ -41,7 +41,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfo(artistName: String?) {
         Log.e("TAG", "artistName $artistName")
         Thread {
-            var text = DataBase.getInfo(dataBase, artistName)
+            var text = dataBase.getInfo(artistName)
             if (text != null) {
                 text = "[*]$text"
             } else {
@@ -72,7 +72,7 @@ class OtherInfoWindow : AppCompatActivity() {
         } else {
             text = snippet.asString.replace("\\n", "\n")
             text = textToHtml(text, artistName)
-            DataBase.saveArtist(dataBase, artistName, text)
+            dataBase.saveArtist(artistName, text)
         }
         return text
     }
@@ -116,9 +116,9 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        DataBase.saveArtist(dataBase, "test", "sarasa")
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
-        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
+        dataBase.saveArtist("test", "sarasa")
+        Log.e("TAG", "" + dataBase.getInfo("test"))
+        Log.e("TAG", "" + dataBase.getInfo("nada"))
         getArtistInfo(artist)
     }
 
