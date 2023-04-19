@@ -19,6 +19,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.IOException
 import java.util.*
 
+private const val WIKIPEDIA_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
+
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
     private var dataBase: DataBase? = null
@@ -61,13 +63,23 @@ class OtherInfoWindow : AppCompatActivity() {
                     e1.printStackTrace()
                 }
             }
-            val imageUrl = "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
-            val finalText = text
-            runOnUiThread {
-                Picasso.get().load(imageUrl).into(findViewById<View>(R.id.imageView) as ImageView)
-                textPane2!!.text = Html.fromHtml(finalText)
-            }
+
+            loadWikipediaLogo()
+            updateArtistDescription(text)
+
         }.start()
+    }
+
+    private fun updateArtistDescription(finalText: String?) {
+        runOnUiThread {
+            textPane2!!.text = Html.fromHtml(finalText)
+        }
+    }
+
+    private fun loadWikipediaLogo() {
+        runOnUiThread {
+            Picasso.get().load(WIKIPEDIA_LOGO_URL).into(findViewById<View>(R.id.imageView) as ImageView)
+        }
     }
 
     private fun getArtistInfoFromAPI(artistName: String?): Response<String> {
@@ -78,6 +90,8 @@ class OtherInfoWindow : AppCompatActivity() {
         val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
         return wikipediaAPI.getArtistInfo(artistName).execute()
     }
+
+
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
