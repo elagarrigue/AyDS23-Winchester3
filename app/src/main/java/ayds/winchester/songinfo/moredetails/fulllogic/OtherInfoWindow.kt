@@ -31,19 +31,13 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     fun getArtistInfo(artistName: String?) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://en.wikipedia.org/w/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
             if (text != null) {
                 text = "[*]$text"
             } else {
-                val callResponse: Response<String>
                 try {
-                    callResponse = wikipediaAPI.getArtistInfo(artistName).execute()
+                    val callResponse = getArtistInfoFromAPI(artistName)
                     val gson = Gson()
                     val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
                     val query = jobj["query"].asJsonObject
@@ -74,6 +68,15 @@ class OtherInfoWindow : AppCompatActivity() {
                 textPane2!!.text = Html.fromHtml(finalText)
             }
         }.start()
+    }
+
+    private fun getArtistInfoFromAPI(artistName: String?): Response<String> {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://en.wikipedia.org/w/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+        val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
+        return wikipediaAPI.getArtistInfo(artistName).execute()
     }
 
     private fun open(artist: String?) {
