@@ -14,7 +14,7 @@ const val ARTISTS_TABLE = "artists"
 const val ID_COLUMN = "id"
 const val ARTIST_COLUMN = "artist"
 const val INFO_COLUMN = "info"
-const val  SOURCE_COLUMN = "source"
+const val SOURCE_COLUMN = "source"
 
 const val createArtistInfoTableQuery: String =
     "create table $ARTISTS_TABLE (" +
@@ -26,7 +26,7 @@ const val createArtistInfoTableQuery: String =
 private const val DATABASE_NAME="artist.db" //"dictionary.db"
 private const val DATABASE_VERSION= 1
 
-class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
+class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createArtistInfoTableQuery)
         Log.i("DataBaseArtist", "ArtistDataBase Created OK")
@@ -72,18 +72,18 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
         }*/
 
 
-        fun saveArtist(db: SQLiteDatabase, artist: String?, info: String?) {
+        fun saveArtist(artist: String?, info: String?) {
             // Gets the data repository in write mode
            // val db = dbHelper.writableDatabase
 
 // Create a new map of values, where column names are the keys
             val values = ContentValues()
-            values.put("artist", artist)
-            values.put("info", info)
-            values.put("source", 1)
+            values.put(ARTIST_COLUMN, artist)
+            values.put(INFO_COLUMN, info)
+            values.put(SOURCE_COLUMN, 1)
 
 // Insert the new row, returning the primary key value of the new row
-            writableDatabase?.insert("artists", null, values)
+            writableDatabase?.insert(ARTIST_COLUMN, null, values)
         }
 
 
