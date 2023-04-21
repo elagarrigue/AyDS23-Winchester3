@@ -27,16 +27,16 @@ private const val DATABASE_VERSION= 1
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(
-            "create table artists (id INTEGER PRIMARY KEY AUTOINCREMENT, artist string, info string, source integer)"
-        )
-        Log.i("DB", "DB created")
+        db.execSQL(createArtistInfoTableQuery)
+        Log.i("DataBaseArtist", "ArtistDataBase Created OK")
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
 
-    companion object {
-        fun testDB() {
+    }
+
+    /*companion object {
+      fun testDB() {
             var connection: Connection? = null
             try {
                 // create a database connection
@@ -68,12 +68,12 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                     System.err.println(e)
                 }
             }
-        }
+        }*/
 
-        @JvmStatic
-        fun saveArtist(dbHelper: DataBase, artist: String?, info: String?) {
+
+        fun saveArtist(db: SQLiteDatabase, artist: String?, info: String?) {
             // Gets the data repository in write mode
-            val db = dbHelper.writableDatabase
+           // val db = dbHelper.writableDatabase
 
 // Create a new map of values, where column names are the keys
             val values = ContentValues()
@@ -82,13 +82,12 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             values.put("source", 1)
 
 // Insert the new row, returning the primary key value of the new row
-            val newRowId = db.insert("artists", null, values)
+            writableDatabase?.insert("artists", null, values)
         }
 
-        @JvmStatic
+
         fun getInfo(dbHelper: DataBase, artist: String): String? {
             val db = dbHelper.readableDatabase
-
 // Define a projection that specifies which columns from the database
 // you will actually use after this query.
             val projection = arrayOf(
@@ -122,5 +121,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             cursor.close()
             return if (items.isEmpty()) null else items[0]
         }
+
+
     }
-}
