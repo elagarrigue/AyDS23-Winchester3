@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.winchester.songinfo.R
 import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
 import retrofit2.Response
@@ -20,6 +21,11 @@ import java.io.IOException
 import java.util.*
 
 private const val WIKIPEDIA_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
+private const val QUERY = "query"
+private const val SEARCH = "search"
+private const val SNIPPET = "snippet"
+private const val PAGEID = "pageid"
+private const val BASE_URL = "https://en.wikipedia.org/?curid="
 
 class OtherInfoWindow : AppCompatActivity() {
     private var textPane2: TextView? = null
@@ -42,24 +48,9 @@ class OtherInfoWindow : AppCompatActivity() {
                 try {
                     val callResponse = getArtistInfoFromAPI(artistName)
                     Log.e("JSON ", callResponse.body().toString())
-                    val gson = Gson()
-                    val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
-                    val query = jobj["query"].asJsonObject
-                    val snippet = query["search"].asJsonArray[0].asJsonObject["snippet"]
-                    val pageid = query["search"].asJsonArray[0].asJsonObject["pageid"]
-                    if (snippet == null) {
-                        text = "No Results"
-                    } else {
-                        text = snippet.asString.replace("\\n", "\n")
-                        text = textToHtml(text, artistName)
-                        DataBase.saveArtist(dataBase, artistName, text)
-                    }
-                    val urlString = "https://en.wikipedia.org/?curid=$pageid"
-                    findViewById<View>(R.id.openUrlButton).setOnClickListener {
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.data = Uri.parse(urlString)
-                        startActivity(intent)
-                    }
+                    val query = getFirstItem(callResponse)
+                    text = getFormatTextSnippet(query[SNIPPET], artistName)
+                    setButtonUrl(query[PAGEID])
                 } catch (e1: IOException) {
                     Log.e("TAG", "Error $e1")
                     e1.printStackTrace()
@@ -68,8 +59,38 @@ class OtherInfoWindow : AppCompatActivity() {
             Log.e("TAG", "Get Image from $WIKIPEDIA_LOGO_URL")
             loadWikipediaLogo()
             updateArtistDescription(text)
-
         }.start()
+    }
+
+    private fun getFormatTextSnippet(
+        snippet: JsonElement,
+        artistName: String?
+    ): String {
+        var text = ""
+        if (snippet == null) {
+            text = "No Results"
+        } else {
+            text = snippet.asString.replace("\\n", "\n")
+            text = textToHtml(text, artistName)
+            DataBase.saveArtist(dataBase, artistName, text)
+        }
+        return text
+    }
+
+    private fun setButtonUrl(pageid: JsonElement?) {
+        val urlString = "$BASE_URL$pageid"
+        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(urlString)
+            startActivity(intent)
+        }
+    }
+
+    private fun getFirstItem(callResponse: Response<String>): JsonObject {
+        val jobj = Gson().fromJson(callResponse.body(), JsonObject::class.java)
+        val query = jobj[QUERY].asJsonObject
+        val item = query[SEARCH].asJsonArray
+        return item[0].asJsonObject
     }
 
     private fun updateArtistDescription(finalText: String?) {
