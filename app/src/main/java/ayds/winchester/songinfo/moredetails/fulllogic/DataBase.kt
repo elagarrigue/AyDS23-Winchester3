@@ -2,6 +2,7 @@ package ayds.winchester.songinfo.moredetails.fulllogic
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -111,6 +112,12 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
                 null,  // don't filter by row groups
                 sortOrder // The sort order
             )
+
+            return mapArtistInfo(cursor)
+
+        }
+
+        private fun mapArtistInfo(cursor: Cursor): String?{
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
                 val info = cursor.getString(
@@ -121,6 +128,5 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", n
             cursor.close()
             return if (items.isEmpty()) null else items[0]
         }
-
 
     }
