@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import ayds.winchester.songinfo.home.model.repository.local.spotify.sqldb.*
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -15,6 +16,12 @@ const val ID_COLUMN = "id"
 const val ARTIST_COLUMN = "artist"
 const val INFO_COLUMN = "info"
 const val SOURCE_COLUMN = "source"
+
+private val projection = arrayOf(
+    ID_COLUMN,
+    ARTIST_COLUMN,
+    INFO_COLUMN,
+)
 
 const val createArtistInfoTableQuery: String =
     "create table $ARTISTS_TABLE (" +
@@ -87,30 +94,16 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         }
 
 
-        fun getInfo(dbHelper: DataBase, artist: String): String? {
-            val db = dbHelper.readableDatabase
-// Define a projection that specifies which columns from the database
-// you will actually use after this query.
-            val projection = arrayOf(
-                "id",
-                "artist",
-                "info"
-            )
+        fun getInfo(artist: String): String? {
 
-// Filter results WHERE "title" = 'My Title'
-            val selection = "artist  = ?"
-            val selectionArgs = arrayOf(artist)
-
-// How you want the results sorted in the resulting Cursor
-            val sortOrder = "artist DESC"
-            val cursor = db.query(
+            val cursor = readableDatabase.query(
                 "artists",  // The table to query
                 projection,  // The array of columns to return (pass null to get all)
-                selection,  // The columns for the WHERE clause
-                selectionArgs,  // The values for the WHERE clause
+                "$ARTIST_COLUMN = ?",  // The columns for the WHERE clause
+                arrayOf(artist),  // The values for the WHERE clause
                 null,  // don't group the rows
                 null,  // don't filter by row groups
-                sortOrder // The sort order
+                "artist DESC" // The sort order
             )
 
             return mapArtistInfo(cursor)
