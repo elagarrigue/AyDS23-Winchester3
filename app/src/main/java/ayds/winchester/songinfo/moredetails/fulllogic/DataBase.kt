@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import ayds.winchester.songinfo.home.model.repository.local.spotify.sqldb.*
+import java.io.IOException
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
@@ -35,16 +35,21 @@ private const val DATABASE_VERSION= 1
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(createArtistInfoTableQuery)
-        Log.i("DataBaseArtist", "ArtistDataBase Created OK")
+     try{
+         db.execSQL(createArtistInfoTableQuery)
+         Log.i("DataBaseArtist", "ArtistDataBase Created OK")
+     }catch ( error : IOException){
+         Log.i("DataBaseArtist", "ArtisDataBase error : "+ error.message);
+     }
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
 
     }
 
-    /*companion object {
-      fun testDB() {
+    companion object {
+      /*  fun testDB() {
             var connection: Connection? = null
             try {
                 // create a database connection
@@ -79,9 +84,11 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         }*/
 
 
+
+        @JvmStatic
         fun saveArtist(artist: String?, info: String?) {
             // Gets the data repository in write mode
-           // val db = dbHelper.writableDatabase
+            // val db = dbHelper.writableDatabase
 
 // Create a new map of values, where column names are the keys
             val values = ContentValues()
@@ -94,23 +101,25 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         }
 
 
+
+        @JvmStatic
         fun getInfo(artist: String): String? {
 
             val cursor = readableDatabase.query(
-                "artists",  // The table to query
-                projection,  // The array of columns to return (pass null to get all)
-                "$ARTIST_COLUMN = ?",  // The columns for the WHERE clause
-                arrayOf(artist),  // The values for the WHERE clause
-                null,  // don't group the rows
-                null,  // don't filter by row groups
-                "artist DESC" // The sort order
+                ARTISTS_TABLE,
+                projection,
+                "$ARTIST_COLUMN = ?",
+                arrayOf(artist),
+                null,
+                null,
+                "artist DESC"
             )
 
             return mapArtistInfo(cursor)
 
         }
 
-        private fun mapArtistInfo(cursor: Cursor): String?{
+        private fun mapArtistInfo(cursor: Cursor): String? {
             val items: MutableList<String> = ArrayList()
             while (cursor.moveToNext()) {
                 val info = cursor.getString(
@@ -123,3 +132,5 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         }
 
     }
+
+}
