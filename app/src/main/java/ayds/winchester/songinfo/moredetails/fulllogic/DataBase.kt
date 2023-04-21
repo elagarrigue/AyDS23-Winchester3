@@ -11,11 +11,11 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
-const val ARTISTS_TABLE = "artists"
-const val ID_COLUMN = "id"
-const val ARTIST_COLUMN = "artist"
-const val INFO_COLUMN = "info"
-const val SOURCE_COLUMN = "source"
+private const val ARTISTS_TABLE = "artists"
+private const val ID_COLUMN = "id"
+private const val ARTIST_COLUMN = "artist"
+private const val INFO_COLUMN = "info"
+private const val SOURCE_COLUMN = "source"
 
 private val projection = arrayOf(
     ID_COLUMN,
@@ -23,7 +23,7 @@ private val projection = arrayOf(
     INFO_COLUMN,
 )
 
-const val createArtistInfoTableQuery: String =
+private const val createArtistInfoTableQuery: String =
     "create table $ARTISTS_TABLE (" +
             "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT," +
             "$ARTIST_COLUMN string," +
