@@ -33,6 +33,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     fun getArtistInfo(artistName: String?) {
+        Log.e("TAG", "artistName $artistName")
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
             if (text != null) {
@@ -40,6 +41,7 @@ class OtherInfoWindow : AppCompatActivity() {
             } else {
                 try {
                     val callResponse = getArtistInfoFromAPI(artistName)
+                    Log.e("JSON ", callResponse.body().toString())
                     val gson = Gson()
                     val jobj = gson.fromJson(callResponse.body(), JsonObject::class.java)
                     val query = jobj["query"].asJsonObject
@@ -63,7 +65,7 @@ class OtherInfoWindow : AppCompatActivity() {
                     e1.printStackTrace()
                 }
             }
-
+            Log.e("TAG", "Get Image from $WIKIPEDIA_LOGO_URL")
             loadWikipediaLogo()
             updateArtistDescription(text)
 
@@ -95,6 +97,9 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
+        DataBase.saveArtist(dataBase, "test", "sarasa")
+        Log.e("TAG", "" + DataBase.getInfo(dataBase, "test"))
+        Log.e("TAG", "" + DataBase.getInfo(dataBase, "nada"))
         getArtistInfo(artist)
     }
 
