@@ -9,6 +9,22 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
+const val ARTISTS_TABLE = "artists"
+const val ID_COLUMN = "id"
+const val ARTIST_COLUMN = "artist"
+const val INFO_COLUMN = "info"
+const val  SOURCE_COLUMN = "source"
+
+const val createArtistInfoTableQuery: String =
+    "create table $ARTISTS_TABLE (" +
+            "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "$ARTIST_COLUMN string," +
+            "$INFO_COLUMN string" +
+            "$SOURCE_COLUMN)"
+
+private const val DATABASE_NAME="artist.db" //"dictionary.db"
+private const val DATABASE_VERSION= 1
+
 class DataBase(context: Context?) : SQLiteOpenHelper(context, "dictionary.db", null, 1) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
