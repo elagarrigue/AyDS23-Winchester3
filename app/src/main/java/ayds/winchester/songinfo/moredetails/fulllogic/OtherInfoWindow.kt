@@ -28,7 +28,7 @@ private const val PAGEID = "pageid"
 private const val BASE_URL = "https://en.wikipedia.org/?curid="
 
 class OtherInfoWindow : AppCompatActivity() {
-    private var textPane2: TextView? = null
+    private lateinit var textPane2: TextView
     private var dataBase: DataBase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,7 @@ class OtherInfoWindow : AppCompatActivity() {
         open(intent.getStringExtra("artistName"))
     }
 
-    fun getArtistInfo(artistName: String?) {
+    private fun getArtistInfo(artistName: String?) {
         Log.e("TAG", "artistName $artistName")
         Thread {
             var text = DataBase.getInfo(dataBase, artistName)
@@ -63,10 +63,10 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun getFormatTextSnippet(
-        snippet: JsonElement,
+        snippet: JsonElement?,
         artistName: String?
     ): String {
-        var text = ""
+        var text: String
         if (snippet == null) {
             text = "No Results"
         } else {
@@ -95,7 +95,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun updateArtistDescription(finalText: String?) {
         runOnUiThread {
-            textPane2!!.text = Html.fromHtml(finalText)
+            textPane2.text = Html.fromHtml(finalText)
         }
     }
 
@@ -114,8 +114,6 @@ class OtherInfoWindow : AppCompatActivity() {
         return wikipediaAPI.getArtistInfo(artistName).execute()
     }
 
-
-
     private fun open(artist: String?) {
         dataBase = DataBase(this)
         DataBase.saveArtist(dataBase, "test", "sarasa")
@@ -124,19 +122,20 @@ class OtherInfoWindow : AppCompatActivity() {
         getArtistInfo(artist)
     }
 
+    private fun textToHtml(text: String, term: String?): String {
+        val builder = StringBuilder()
+        builder.append("<html><div width=400>")
+        builder.append("<font face=\"arial\">")
+        val textWithBold = text
+            .replace("'", " ")
+            .replace("\n", "<br>")
+            .replace("(?i)$term".toRegex(), "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>")
+        builder.append(textWithBold)
+        builder.append("</font></div></html>")
+        return builder.toString()
+    }
+
     companion object {
         const val ARTIST_NAME_EXTRA = "artistName"
-        fun textToHtml(text: String, term: String?): String {
-            val builder = StringBuilder()
-            builder.append("<html><div width=400>")
-            builder.append("<font face=\"arial\">")
-            val textWithBold = text
-                .replace("'", " ")
-                .replace("\n", "<br>")
-                .replace("(?i)$term".toRegex(), "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>")
-            builder.append(textWithBold)
-            builder.append("</font></div></html>")
-            return builder.toString()
-        }
     }
 }
