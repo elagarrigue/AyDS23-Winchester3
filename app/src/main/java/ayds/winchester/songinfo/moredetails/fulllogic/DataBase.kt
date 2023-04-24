@@ -49,41 +49,31 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
     }
 
     companion object {
-      /*  fun testDB() {
+       fun testDB() {
             var connection: Connection? = null
             try {
-                // create a database connection
-                connection = DriverManager.getConnection("jdbc:sqlite:./dictionary.db")
+                connection = DriverManager.getConnection("jdbc:sqlite:./$DATABASE_NAME")
                 val statement = connection.createStatement()
                 statement.queryTimeout = 30 // set timeout to 30 sec.
 
-                //statement.executeUpdate("drop table if exists person");
-                //statement.executeUpdate("create table person (id integer, name string)");
-                //statement.executeUpdate("insert into person values(1, 'leo')");
-                //statement.executeUpdate("insert into person values(2, 'yui')");
-                val rs = statement.executeQuery("select * from artists")
+                val rs = statement.executeQuery("select * from $ARTISTS_TABLE")
                 while (rs.next()) {
                     // read the result set
-                    println("id = " + rs.getInt("id"))
-                    println("artist = " + rs.getString("artist"))
-                    println("info = " + rs.getString("info"))
-                    println("source = " + rs.getString("source"))
+                    Log.i("DataBaseArtist", "$ID_COLUMN = " + rs.getInt(ID_COLUMN))
+                    Log.i("DataBaseArtist","$ARTIST_COLUMN = " + rs.getString(ARTIST_COLUMN))
+                    Log.i("DataBaseArtist","$INFO_COLUMN = " + rs.getString(INFO_COLUMN))
+                    Log.i("DataBaseArtist","$SOURCE_COLUMN = " + rs.getString(SOURCE_COLUMN))
                 }
-            } catch (e: SQLException) {
-                // if the error message is "out of memory",
-                // it probably means no database file is found
-                System.err.println(e.message)
+            } catch (error: SQLException) {
+                Log.e("DataBaseArtist", "ArtisDataBase error: "+error.message)
             } finally {
                 try {
                     connection?.close()
-                } catch (e: SQLException) {
-                    // connection close failed.
-                    System.err.println(e)
+                } catch (error: SQLException) {
+                    Log.e("DataBaseArtist", "ArtisDataBase error: "+error.message)
                 }
             }
-        }*/
-
-
+        }
 
         @JvmStatic
         fun saveArtist(artist: String?, info: String?) {
@@ -100,8 +90,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
             writableDatabase?.insert(ARTIST_COLUMN, null, values)
         }
 
-
-
         @JvmStatic
         fun getInfo(artist: String): String? {
 
@@ -114,9 +102,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
                 null,
                 "artist DESC"
             )
-
             return mapArtistInfo(cursor)
-
         }
 
         private fun mapArtistInfo(cursor: Cursor): String? {
