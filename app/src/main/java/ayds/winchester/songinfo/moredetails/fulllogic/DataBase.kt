@@ -33,15 +33,17 @@ private const val createArtistInfoTableQuery: String =
 private const val DATABASE_NAME="artist.db" //"dictionary.db"
 private const val DATABASE_VERSION= 1
 
+private var dataBase: DataBase = TODO()
+
 class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
-     try{
-         db.execSQL(createArtistInfoTableQuery)
-         Log.i("DataBaseArtist", "ArtistDataBase Created OK")
-     }catch ( error : IOException){
-         Log.i("DataBaseArtist", "ArtisDataBase error : "+ error.message);
-     }
-
+        dataBase = this
+         try{
+             db.execSQL(createArtistInfoTableQuery)
+            Log.i("DataBaseArtist", "ArtistDataBase Created OK")
+        }catch ( error : IOException){
+            Log.e("DataBaseArtist", "ArtisDataBase error : "+ error.message);
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -77,23 +79,18 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
 
         @JvmStatic
         fun saveArtist(artist: String?, info: String?) {
-            // Gets the data repository in write mode
-            // val db = dbHelper.writableDatabase
-
-// Create a new map of values, where column names are the keys
             val values = ContentValues()
             values.put(ARTIST_COLUMN, artist)
             values.put(INFO_COLUMN, info)
             values.put(SOURCE_COLUMN, 1)
 
-// Insert the new row, returning the primary key value of the new row
-            writableDatabase?.insert(ARTIST_COLUMN, null, values)
+            dataBase.writableDatabase?.insert(ARTIST_COLUMN, null, values)
         }
 
         @JvmStatic
         fun getInfo(artist: String): String? {
 
-            val cursor = readableDatabase.query(
+            val cursor = dataBase.readableDatabase.query(
                 ARTISTS_TABLE,
                 projection,
                 "$ARTIST_COLUMN = ?",
