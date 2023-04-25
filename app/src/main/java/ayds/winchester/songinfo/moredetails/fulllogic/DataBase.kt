@@ -56,11 +56,10 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
             try {
                 connection = DriverManager.getConnection("jdbc:sqlite:./$DATABASE_NAME")
                 val statement = connection.createStatement()
-                statement.queryTimeout = 30 // set timeout to 30 sec.
+                statement.queryTimeout = 30
 
                 val rs = statement.executeQuery("select * from $ARTISTS_TABLE")
                 while (rs.next()) {
-                    // read the result set
                     Log.i("DataBaseArtist", "$ID_COLUMN = " + rs.getInt(ID_COLUMN))
                     Log.i("DataBaseArtist","$ARTIST_COLUMN = " + rs.getString(ARTIST_COLUMN))
                     Log.i("DataBaseArtist","$INFO_COLUMN = " + rs.getString(INFO_COLUMN))
@@ -79,6 +78,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
 
         @JvmStatic
         fun saveArtist(artist: String?, info: String?) {
+
             val values = ContentValues()
             values.put(ARTIST_COLUMN, artist)
             values.put(INFO_COLUMN, info)
