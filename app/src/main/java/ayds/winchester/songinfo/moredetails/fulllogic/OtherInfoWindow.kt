@@ -28,28 +28,36 @@ private const val PAGEID = "pageid"
 private const val BASE_URL = "https://en.wikipedia.org/?curid="
 
 class OtherInfoWindow : AppCompatActivity() {
-    private lateinit var textPane2: TextView
+    private lateinit var artistDescriptionTextView: TextView
     private var dataBase: DataBase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
-        textPane2 = findViewById(R.id.textPane2)
+        artistDescriptionTextView = findViewById(R.id.textPane2)
         open(intent.getStringExtra("artistName"))
+    }
+
+    private fun open(artist: String?) {
+        dataBase = DataBase(this)
+        dataBase.saveArtist("test", "sarasa")
+        Log.e("TAG", "" + dataBase.getInfo("test"))
+        Log.e("TAG", "" + dataBase.getInfo("nada"))
+        getArtistInfo(artist)
     }
 
     private fun getArtistInfo(artistName: String?) {
         Log.e("TAG", "artistName $artistName")
         Thread {
-            var text = dataBase.getInfo(artistName)
-            if (text != null) {
-                text = "[*]$text"
+            var artistDescription = dataBase.getInfo(artistName)
+            if (artistDescription != null) {
+                artistDescription = "[*]$artistDescription"
             } else {
                 try {
                     val callResponse = getArtistInfoFromAPI(artistName)
                     Log.e("JSON ", callResponse.body().toString())
                     val query = getFirstItem(callResponse)
-                    text = getFormatTextSnippet(query[SNIPPET], artistName)
+                    artistDescription = getFormatTextSnippet(query[SNIPPET], artistName)
                     setButtonUrl(query[PAGEID])
                 } catch (e1: IOException) {
                     Log.e("TAG", "Error $e1")
@@ -58,8 +66,24 @@ class OtherInfoWindow : AppCompatActivity() {
             }
             Log.e("TAG", "Get Image from $WIKIPEDIA_LOGO_URL")
             loadWikipediaLogo()
-            updateArtistDescription(text)
+            updateArtistDescription(artistDescription)
         }.start()
+    }
+
+    private fun getArtistInfoFromAPI(artistName: String?): Response<String> {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://en.wikipedia.org/w/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+        val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
+        return wikipediaAPI.getArtistInfo(artistName).execute()
+    }
+
+    private fun getFirstItem(callResponse: Response<String>): JsonObject {
+        val jsonObject = Gson().fromJson(callResponse.body(), JsonObject::class.java)
+        val query = jsonObject[QUERY].asJsonObject
+        val item = query[SEARCH].asJsonArray
+        return item[0].asJsonObject
     }
 
     private fun getFormatTextSnippet(
@@ -77,51 +101,6 @@ class OtherInfoWindow : AppCompatActivity() {
         return text
     }
 
-    private fun setButtonUrl(pageid: JsonElement?) {
-        val urlString = "$BASE_URL$pageid"
-        findViewById<View>(R.id.openUrlButton).setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlString)
-            startActivity(intent)
-        }
-    }
-
-    private fun getFirstItem(callResponse: Response<String>): JsonObject {
-        val jobj = Gson().fromJson(callResponse.body(), JsonObject::class.java)
-        val query = jobj[QUERY].asJsonObject
-        val item = query[SEARCH].asJsonArray
-        return item[0].asJsonObject
-    }
-
-    private fun updateArtistDescription(finalText: String?) {
-        runOnUiThread {
-            textPane2.text = Html.fromHtml(finalText)
-        }
-    }
-
-    private fun loadWikipediaLogo() {
-        runOnUiThread {
-            Picasso.get().load(WIKIPEDIA_LOGO_URL).into(findViewById<View>(R.id.imageView) as ImageView)
-        }
-    }
-
-    private fun getArtistInfoFromAPI(artistName: String?): Response<String> {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://en.wikipedia.org/w/")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-        val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
-        return wikipediaAPI.getArtistInfo(artistName).execute()
-    }
-
-    private fun open(artist: String?) {
-        dataBase = DataBase(this)
-        dataBase.saveArtist("test", "sarasa")
-        Log.e("TAG", "" + dataBase.getInfo("test"))
-        Log.e("TAG", "" + dataBase.getInfo("nada"))
-        getArtistInfo(artist)
-    }
-
     private fun textToHtml(text: String, term: String?): String {
         val builder = StringBuilder()
         builder.append("<html><div width=400>")
@@ -133,6 +112,27 @@ class OtherInfoWindow : AppCompatActivity() {
         builder.append(textWithBold)
         builder.append("</font></div></html>")
         return builder.toString()
+    }
+
+    private fun setButtonUrl(pageid: JsonElement?) {
+        val urlString = "$BASE_URL$pageid"
+        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(urlString)
+            startActivity(intent)
+        }
+    }
+
+    private fun loadWikipediaLogo() {
+        runOnUiThread {
+            Picasso.get().load(WIKIPEDIA_LOGO_URL).into(findViewById<View>(R.id.imageView) as ImageView)
+        }
+    }
+
+    private fun updateArtistDescription(finalText: String?) {
+        runOnUiThread {
+            artistDescriptionTextView.text = Html.fromHtml(finalText)
+        }
     }
 
     companion object {
