@@ -32,7 +32,6 @@ private const val DATABASE_VERSION= 1
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
-        dataBase = this
          try{
              db.execSQL(createArtistInfoTableQuery)
             Log.i("DataBaseArtist", "ArtistDataBase Created OK")
