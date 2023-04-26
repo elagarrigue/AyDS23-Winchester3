@@ -29,7 +29,7 @@ private const val BASE_URL = "https://en.wikipedia.org/?curid="
 
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var artistDescriptionTextView: TextView
-    private var dataBase: DataBase? = null
+    private lateinit var dataBase: DataBase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +49,7 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun getArtistInfo(artistName: String?) {
         Log.e("TAG", "artistName $artistName")
         Thread {
-            var artistDescription = dataBase.getInfo(artistName)
+            var artistDescription = artistName?.let { dataBase.getInfo(it) }
             if (artistDescription != null) {
                 artistDescription = "[*]$artistDescription"
             } else {
