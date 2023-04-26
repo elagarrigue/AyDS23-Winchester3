@@ -4,13 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.winchester.songinfo.R
-import ayds.winchester.songinfo.home.model.entities.Song
+import ayds.winchester.songinfo.moredetails.fulllogic.Artist.*
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -36,17 +35,17 @@ class OtherInfoWindow : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         artistDescriptionTextView = findViewById(R.id.textPane2)
-        open(intent.getStringExtra(ARTIST_NAME_EXTRA))
+        open(intent.getStringExtra(ARTIST_NAME_EXTRA).toString())
     }
 
-    private fun open(artist: String?) {
+    private fun open(artist: String) {
         dataBase = DataBase(this)
         getArtistInfo(artist)
     }
 
-    private fun getArtistInfo(artistName: String?) {
+    private fun getArtistInfo(artistName: String) {
         Thread {
-            var artistDescription = artistName?.let { dataBase.getInfo(it) }
+            var artistDescription = dataBase.getInfo(artistName)
             if (artistDescription != null) {
                 artistDescription = "[*]$artistDescription"
             } else {
@@ -63,6 +62,46 @@ class OtherInfoWindow : AppCompatActivity() {
             updateArtistDescription(artistDescription)
         }.start()
     }
+    private fun searchArtistInfo(artistName: String): WikipediaArtist {
+        var wikipediaArtist = getArtistFromLocalStorage(artistName)
+        when {
+            wikipediaArtist != null ->  wikipediaArtist.markArtistAsLocal()
+            else -> {
+                wikipediaArtist = getArtistFromWikipedia(artistName)
+            }
+        }
+
+    }
+
+    private fun getArtistFromWikipedia(artistName: String): WikipediaArtist? {
+        val callResponse = getArtistInfoFromAPI(artistName)
+        var artist = getArtistFromExternalData(callResponse.body(),artistName)
+        artistDescription = getFormatTextSnippet(query[SNIPPET], artistName)
+        setButtonUrl(query[PAGEID])
+    }
+
+    private fun getArtistFromExternalData(wikipediaData: String?,artistName: String): WikipediaArtist {
+        val query = wikipediaData.getFirstItem()
+        val artist = WikipediaArtist(artistName=artistName, description=query.getDescription(), wikipediaURL=query.getWikipediaUrl())
+        return artist
+    }
+    private fun JsonObject.getDescription() = this[SNIPPET].asString
+
+    private fun JsonObject.getWikipediaUrl() = BASE_URL + this[PAGEID]
+
+    private fun WikipediaArtist.markArtistAsLocal() {
+        this.isLocallyStored = true
+    }
+    private fun getArtistFromLocalStorage(artistName: String): WikipediaArtist? {
+        var artistDescription = dataBase.getInfo(artistName)
+        var artist: WikipediaArtist?
+        if (artistDescription == null)
+            artist = null
+        else
+            artist = WikipediaArtist(artistName=artistName,description=artistDescription)
+        return artist
+    }
+
     private fun getArtistInfoFromAPI(artistName: String?): Response<String> {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://en.wikipedia.org/w/")
@@ -72,8 +111,8 @@ class OtherInfoWindow : AppCompatActivity() {
         return wikipediaAPI.getArtistInfo(artistName).execute()
     }
 
-    private fun getFirstItem(callResponse: Response<String>): JsonObject {
-        val jsonObject = Gson().fromJson(callResponse.body(), JsonObject::class.java)
+    private fun String?.getFirstItem(): JsonObject {
+        val jsonObject = Gson().fromJson(this, JsonObject::class.java)
         val query = jsonObject[QUERY].asJsonObject
         val item = query[SEARCH].asJsonArray
         return item[0].asJsonObject
@@ -136,9 +175,9 @@ class OtherInfoWindow : AppCompatActivity() {
 sealed class Artist {
     data class WikipediaArtist(
         val artistName: String,
-        val wikipediaURL: String,
-        val isLocallyStored: Boolean = false,
-        val description: String
+        var wikipediaURL: String = BASE_URL,
+        var isLocallyStored: Boolean = false,
+        var description: String
     ) : Artist()
 
     object EmptyArtist : Artist()
