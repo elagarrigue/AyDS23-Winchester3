@@ -27,7 +27,7 @@ private const val createArtistInfoTableQuery: String =
             "$INFO_COLUMN string" +
             "$SOURCE_COLUMN)"
 
-private const val DATABASE_NAME="artist.db"
+private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 1
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -49,7 +49,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         values.put(INFO_COLUMN, info)
         values.put(SOURCE_COLUMN, 1)
 
-        writableDatabase?.insert(ARTIST_COLUMN, null, values)
+        writableDatabase?.insert(ARTISTS_TABLE, null, values)
     }
 
     fun getInfo(artist: String): String? {
