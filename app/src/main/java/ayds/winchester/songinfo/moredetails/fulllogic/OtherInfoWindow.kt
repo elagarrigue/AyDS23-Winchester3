@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.winchester.songinfo.R
+import ayds.winchester.songinfo.home.model.entities.Song
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
@@ -62,7 +63,6 @@ class OtherInfoWindow : AppCompatActivity() {
             updateArtistDescription(artistDescription)
         }.start()
     }
-
     private fun getArtistInfoFromAPI(artistName: String?): Response<String> {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://en.wikipedia.org/w/")
@@ -132,3 +132,15 @@ class OtherInfoWindow : AppCompatActivity() {
         const val ARTIST_NAME_EXTRA = "artistName"
     }
 }
+
+sealed class Artist {
+    data class WikipediaArtist(
+        val artistName: String,
+        val wikipediaURL: String,
+        val isLocallyStored: Boolean = false,
+        val description: String
+    ) : Artist()
+
+    object EmptyArtist : Artist()
+}
+
