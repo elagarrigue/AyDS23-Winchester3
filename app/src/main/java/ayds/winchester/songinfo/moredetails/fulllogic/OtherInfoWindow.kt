@@ -9,9 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.winchester.songinfo.R
-import ayds.winchester.songinfo.moredetails.fulllogic.Artist.*
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
 import retrofit2.Response
@@ -45,46 +43,68 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistInfo(artistName: String) {
         Thread {
-            var artistDescription = dataBase.getInfo(artistName)
-            if (artistDescription != null) {
-                artistDescription = "[*]$artistDescription"
-            } else {
-                try {
-                    val callResponse = getArtistInfoFromAPI(artistName)
-                    val query = getFirstItem(callResponse)
-                    artistDescription = getFormatTextSnippet(query[SNIPPET], artistName)
-                    setButtonUrl(query[PAGEID])
-                } catch (e1: IOException) {
-                    e1.printStackTrace()
-                }
-            }
-            loadWikipediaLogo()
-            updateArtistDescription(artistDescription)
+            val artist = searchArtistInfo(artistName)
+            val description = formatArtistInfo(artist)
+            displayWindow(description, artist?.wikipediaURL)
         }.start()
     }
-    private fun searchArtistInfo(artistName: String): WikipediaArtist {
+
+    private fun displayWindow(
+        description: String,
+        url:String?
+    ) {
+        loadWikipediaLogo()
+        updateArtistDescription(description)
+        setButtonUrl(url)
+    }
+
+    private fun formatArtistInfo(artist: WikipediaArtist?): String {
+        return when(artist){
+            is WikipediaArtist ->
+                if (artist.isLocallyStored) "[*]" else "" +
+                formatDescription(artist.description, artist.name)
+
+            else -> "No Results"
+        }
+    }
+
+    private fun formatDescription(description: String, artistName: String): String {
+        val text = description.replace("\\n", "\n")
+        return textToHtml(text, artistName)
+    }
+
+    private fun searchArtistInfo(artistName: String): WikipediaArtist? {
         var wikipediaArtist = getArtistFromLocalStorage(artistName)
         when {
             wikipediaArtist != null ->  wikipediaArtist.markArtistAsLocal()
             else -> {
-                wikipediaArtist = getArtistFromWikipedia(artistName)
+                try{
+                    wikipediaArtist = getArtistFromWikipedia(artistName)
+                    wikipediaArtist?.let{
+                        dataBase.saveArtist(artistName, it.description)
+                    }
+                }catch (e1: IOException) {
+                    e1.printStackTrace()
+                }
             }
         }
-
+        return wikipediaArtist
     }
 
     private fun getArtistFromWikipedia(artistName: String): WikipediaArtist? {
         val callResponse = getArtistInfoFromAPI(artistName)
-        var artist = getArtistFromExternalData(callResponse.body(),artistName)
-        artistDescription = getFormatTextSnippet(query[SNIPPET], artistName)
-        setButtonUrl(query[PAGEID])
+        return getArtistFromExternalData(callResponse.body(),artistName)
     }
 
-    private fun getArtistFromExternalData(wikipediaData: String?,artistName: String): WikipediaArtist {
+    private fun getArtistFromExternalData(wikipediaData: String?,artistName: String): WikipediaArtist? {
         val query = wikipediaData.getFirstItem()
-        val artist = WikipediaArtist(artistName=artistName, description=query.getDescription(), wikipediaURL=query.getWikipediaUrl())
-        return artist
+        return if (query[SNIPPET]==null){
+            null
+        }else{
+            WikipediaArtist(name=artistName, description=query.getDescription(), wikipediaURL=query.getWikipediaUrl())
+        }
     }
+
     private fun JsonObject.getDescription() = this[SNIPPET].asString
 
     private fun JsonObject.getWikipediaUrl() = BASE_URL + this[PAGEID]
@@ -92,14 +112,13 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun WikipediaArtist.markArtistAsLocal() {
         this.isLocallyStored = true
     }
+
     private fun getArtistFromLocalStorage(artistName: String): WikipediaArtist? {
-        var artistDescription = dataBase.getInfo(artistName)
-        var artist: WikipediaArtist?
-        if (artistDescription == null)
-            artist = null
+        val artistDescription = dataBase.getInfo(artistName)
+        return if (artistDescription == null)
+            null
         else
-            artist = WikipediaArtist(artistName=artistName,description=artistDescription)
-        return artist
+            WikipediaArtist(name=artistName,description=artistDescription)
     }
 
     private fun getArtistInfoFromAPI(artistName: String?): Response<String> {
@@ -118,21 +137,6 @@ class OtherInfoWindow : AppCompatActivity() {
         return item[0].asJsonObject
     }
 
-    private fun getFormatTextSnippet(
-        snippet: JsonElement?,
-        artistName: String?
-    ): String {
-        var text: String
-        if (snippet == null) {
-            text = "No Results"
-        } else {
-            text = snippet.asString.replace("\\n", "\n")
-            text = textToHtml(text, artistName)
-            dataBase.saveArtist(artistName, text)
-        }
-        return text
-    }
-
     private fun textToHtml(text: String, term: String?): String {
         val builder = StringBuilder()
         builder.append("<html><div width=400>")
@@ -146,11 +150,10 @@ class OtherInfoWindow : AppCompatActivity() {
         return builder.toString()
     }
 
-    private fun setButtonUrl(pageid: JsonElement?) {
-        val urlString = "$BASE_URL$pageid"
+    private fun setButtonUrl(url:String?) {
         findViewById<View>(R.id.openUrlButton).setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(urlString)
+            intent.data = Uri.parse(url)
             startActivity(intent)
         }
     }
@@ -172,14 +175,11 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 }
 
-sealed class Artist {
-    data class WikipediaArtist(
-        val artistName: String,
-        var wikipediaURL: String = BASE_URL,
-        var isLocallyStored: Boolean = false,
-        var description: String
-    ) : Artist()
+data class WikipediaArtist(
+    val name: String,
+    var wikipediaURL: String = BASE_URL,
+    var isLocallyStored: Boolean = false,
+    var description: String
+)
 
-    object EmptyArtist : Artist()
-}
 
