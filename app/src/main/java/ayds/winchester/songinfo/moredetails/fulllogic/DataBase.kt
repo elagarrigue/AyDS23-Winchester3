@@ -19,36 +19,28 @@ private val projection = arrayOf(
     ARTIST_COLUMN,
     INFO_COLUMN,
 )
-
-private const val createArtistInfoTableQuery: String =
+ private const val createArtistInfoTableQuery: String =
     "create table $ARTISTS_TABLE (" +
             "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT," +
             "$ARTIST_COLUMN string," +
-            "$INFO_COLUMN string" +
-            "$SOURCE_COLUMN)"
+            "$INFO_COLUMN string," +
+            "$SOURCE_COLUMN string)"
 
 private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 1
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
-         try{
              db.execSQL(createArtistInfoTableQuery)
-            Log.i("DataBaseArtist", "ArtistDataBase Created OK")
-        }catch ( error : IOException){
-            Log.e("DataBaseArtist", "ArtisDataBase error : "+ error.message)
-        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     fun saveArtist(artist: String?, info: String?) {
-
         val values = ContentValues()
         values.put(ARTIST_COLUMN, artist)
         values.put(INFO_COLUMN, info)
         values.put(SOURCE_COLUMN, 1)
-
         writableDatabase?.insert(ARTISTS_TABLE, null, values)
     }
 
