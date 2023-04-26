@@ -35,19 +35,15 @@ class OtherInfoWindow : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
         artistDescriptionTextView = findViewById(R.id.textPane2)
-        open(intent.getStringExtra("artistName"))
+        open(intent.getStringExtra(ARTIST_NAME_EXTRA))
     }
 
     private fun open(artist: String?) {
         dataBase = DataBase(this)
-        dataBase.saveArtist("test", "sarasa")
-        Log.e("TAG", "" + dataBase.getInfo("test"))
-        Log.e("TAG", "" + dataBase.getInfo("nada"))
         getArtistInfo(artist)
     }
 
     private fun getArtistInfo(artistName: String?) {
-        Log.e("TAG", "artistName $artistName")
         Thread {
             var artistDescription = artistName?.let { dataBase.getInfo(it) }
             if (artistDescription != null) {
@@ -55,16 +51,13 @@ class OtherInfoWindow : AppCompatActivity() {
             } else {
                 try {
                     val callResponse = getArtistInfoFromAPI(artistName)
-                    Log.e("JSON ", callResponse.body().toString())
                     val query = getFirstItem(callResponse)
                     artistDescription = getFormatTextSnippet(query[SNIPPET], artistName)
                     setButtonUrl(query[PAGEID])
                 } catch (e1: IOException) {
-                    Log.e("TAG", "Error $e1")
                     e1.printStackTrace()
                 }
             }
-            Log.e("TAG", "Get Image from $WIKIPEDIA_LOGO_URL")
             loadWikipediaLogo()
             updateArtistDescription(artistDescription)
         }.start()
