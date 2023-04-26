@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import java.io.IOException
 
-
 private const val ARTISTS_TABLE = "artists"
 private const val ID_COLUMN = "id"
 private const val ARTIST_COLUMN = "artist"
@@ -31,8 +30,6 @@ private const val createArtistInfoTableQuery: String =
 private const val DATABASE_NAME="artist.db"
 private const val DATABASE_VERSION= 1
 
-private var dataBase: DataBase = TODO()
-
 class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
         dataBase = this
@@ -44,10 +41,7 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         }
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-
-    }
-
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
 
     fun saveArtist(artist: String?, info: String?) {
 
@@ -56,13 +50,12 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         values.put(INFO_COLUMN, info)
         values.put(SOURCE_COLUMN, 1)
 
-        dataBase.writableDatabase?.insert(ARTIST_COLUMN, null, values)
+        writableDatabase?.insert(ARTIST_COLUMN, null, values)
     }
-
 
     fun getInfo(artist: String): String? {
 
-        val cursor = dataBase.readableDatabase.query(
+        val cursor = readableDatabase.query(
             ARTISTS_TABLE,
             projection,
             "$ARTIST_COLUMN = ?",
@@ -85,5 +78,4 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
         cursor.close()
         return if (items.isEmpty()) null else items[0]
     }
-
 }
