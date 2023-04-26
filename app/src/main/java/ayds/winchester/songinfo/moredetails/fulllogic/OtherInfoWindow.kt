@@ -61,8 +61,8 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun formatArtistInfo(artist: WikipediaArtist?): String {
         return when(artist){
             is WikipediaArtist ->
-                if (artist.isLocallyStored) "[*]" else "" +
-                formatDescription(artist.description, artist.name)
+                    (if (artist.isLocallyStored) "[*]" else "") +
+                    formatDescription(artist.description, artist.name)
 
             else -> "No Results"
         }
