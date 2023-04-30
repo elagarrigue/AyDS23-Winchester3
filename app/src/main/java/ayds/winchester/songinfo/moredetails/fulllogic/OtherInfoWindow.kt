@@ -178,10 +178,14 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun setButtonUrl(url:String?) {
         openUrlButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(url)
-            startActivity(intent)
+            openExternalUrl(url)
         }
+    }
+
+    private fun openExternalUrl(url: String?) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        startActivity(intent)
     }
 
     private fun loadWikipediaLogo() {
