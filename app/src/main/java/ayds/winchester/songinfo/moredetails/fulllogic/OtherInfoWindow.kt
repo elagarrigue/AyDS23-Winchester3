@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
-import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -27,17 +27,25 @@ private const val BASE_URL = "https://en.wikipedia.org/?curid="
 
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var artistDescriptionTextView: TextView
+    private lateinit var openUrlButton: Button
+    private lateinit var logoImageView: ImageView
     private lateinit var dataBase: DataBase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_other_info)
-        artistDescriptionTextView = findViewById(R.id.textPane2)
+        initProperties()
         open(intent.getStringExtra(ARTIST_NAME_EXTRA).toString())
     }
 
-    private fun open(artist: String) {
+    private fun initProperties() {
+        artistDescriptionTextView = findViewById(R.id.textPane2)
+        logoImageView = findViewById(R.id.imageView)
+        openUrlButton = findViewById(R.id.openUrlButton)
         dataBase = DataBase(this)
+    }
+
+    private fun open(artist: String) {
         getArtistInfo(artist)
     }
 
@@ -151,7 +159,7 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun setButtonUrl(url:String?) {
-        findViewById<View>(R.id.openUrlButton).setOnClickListener {
+        openUrlButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(url)
             startActivity(intent)
@@ -160,7 +168,7 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun loadWikipediaLogo() {
         runOnUiThread {
-            Picasso.get().load(WIKIPEDIA_LOGO_URL).into(findViewById<View>(R.id.imageView) as ImageView)
+            Picasso.get().load(WIKIPEDIA_LOGO_URL).into(logoImageView)
         }
     }
 
