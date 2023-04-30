@@ -22,8 +22,22 @@ private const val WIKIPEDIA_LOGO_URL = "https://upload.wikimedia.org/wikipedia/c
 private const val QUERY = "query"
 private const val SEARCH = "search"
 private const val SNIPPET = "snippet"
-private const val PAGEID = "pageid"
+private const val PAGE_ID = "pageid"
 private const val BASE_URL = "https://en.wikipedia.org/?curid="
+private const val IS_LOCALLY_STORED_PREFIX = "[*]"
+private const val IS_NOT_LOCALLY_STORED_PREFIX = ""
+private const val NO_RESULTS_MESSAGE = "No Results"
+private const val HTML_DIV_DESCRIPTION = "<html><div width=400>"
+private const val HTML_FONT = "<font face=\"arial\""
+private const val HTML_CLOSE_TAGS = "</font></div></html>"
+private const val NEW_LINE_PLAIN = "\n"
+private const val NEW_LINE_HTML = "<br>"
+private const val SINGLE_QUOTE = "'"
+private const val BLANK_SPACE = " "
+private const val BOLD_TAG = "<b>"
+private const val CLOSE_BOLD_TAG = "</b>"
+private const val BASE_URL_RETROFIT = "https://en.wikipedia.org/w/"
+private const val SLASH_NEW_LINE = "\\n"
 
 class OtherInfoWindow : AppCompatActivity() {
     private lateinit var artistDescriptionTextView: TextView
@@ -51,16 +65,18 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistInfo(artistName: String) {
         Thread {
-            val artist = searchArtistInfo(artistName)
-            val description = formatArtistInfo(artist)
-            displayWindow(description, artist?.wikipediaURL)
+            buildArtistInfo(artistName)
         }.start()
     }
 
-    private fun displayWindow(
-        description: String,
-        url:String?
-    ) {
+    private fun buildArtistInfo(artistName: String) {
+        val artist = searchArtistInfo(artistName)
+        saveArtistInfo(artist)
+        val description = formatArtistInfo(artist)
+        displayWindow(description, artist?.wikipediaURL)
+    }
+
+    private fun displayWindow(description: String,url:String?) {
         loadWikipediaLogo()
         updateArtistDescription(description)
         setButtonUrl(url)
@@ -69,15 +85,21 @@ class OtherInfoWindow : AppCompatActivity() {
     private fun formatArtistInfo(artist: WikipediaArtist?): String {
         return when(artist){
             is WikipediaArtist ->
-                    (if (artist.isLocallyStored) "[*]" else "") +
+                    (if (artist.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX) +
                     formatDescription(artist.description, artist.name)
 
-            else -> "No Results"
+            else -> NO_RESULTS_MESSAGE
+        }
+    }
+
+    private fun saveArtistInfo(artist: WikipediaArtist?) {
+        artist?.let{
+            dataBase.saveArtist(artist.name, it.description)
         }
     }
 
     private fun formatDescription(description: String, artistName: String): String {
-        val text = description.replace("\\n", "\n")
+        val text = description.replace(SLASH_NEW_LINE, NEW_LINE_PLAIN)
         return textToHtml(text, artistName)
     }
 
@@ -88,9 +110,6 @@ class OtherInfoWindow : AppCompatActivity() {
             else -> {
                 try{
                     wikipediaArtist = getArtistFromWikipedia(artistName)
-                    wikipediaArtist?.let{
-                        dataBase.saveArtist(artistName, it.description)
-                    }
                 }catch (e1: IOException) {
                     e1.printStackTrace()
                 }
@@ -101,21 +120,21 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistFromWikipedia(artistName: String): WikipediaArtist? {
         val callResponse = getArtistInfoFromAPI(artistName)
-        return getArtistFromExternalData(callResponse.body(),artistName)
+        val callResponseBody = callResponse.body()
+        val artist = getArtistFromExternalData(callResponseBody, artistName)
+        return artist
     }
 
     private fun getArtistFromExternalData(wikipediaData: String?,artistName: String): WikipediaArtist? {
         val query = wikipediaData.getFirstItem()
-        return if (query[SNIPPET]==null){
-            null
-        }else{
+        return query[SNIPPET]?.let {
             WikipediaArtist(name=artistName, description=query.getDescription(), wikipediaURL=query.getWikipediaUrl())
         }
     }
 
     private fun JsonObject.getDescription() = this[SNIPPET].asString
 
-    private fun JsonObject.getWikipediaUrl() = BASE_URL + this[PAGEID]
+    private fun JsonObject.getWikipediaUrl() = BASE_URL + this[PAGE_ID]
 
     private fun WikipediaArtist.markArtistAsLocal() {
         this.isLocallyStored = true
@@ -123,15 +142,14 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun getArtistFromLocalStorage(artistName: String): WikipediaArtist? {
         val artistDescription = dataBase.getInfo(artistName)
-        return if (artistDescription == null)
-            null
-        else
+        return artistDescription?.let{
             WikipediaArtist(name=artistName,description=artistDescription)
+        }
     }
 
     private fun getArtistInfoFromAPI(artistName: String?): Response<String> {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://en.wikipedia.org/w/")
+            .baseUrl(BASE_URL_RETROFIT)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
         val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
@@ -147,14 +165,14 @@ class OtherInfoWindow : AppCompatActivity() {
 
     private fun textToHtml(text: String, term: String?): String {
         val builder = StringBuilder()
-        builder.append("<html><div width=400>")
-        builder.append("<font face=\"arial\">")
+        builder.append(HTML_DIV_DESCRIPTION)
+        builder.append(HTML_FONT)
         val textWithBold = text
-            .replace("'", " ")
-            .replace("\n", "<br>")
-            .replace("(?i)$term".toRegex(), "<b>" + term!!.uppercase(Locale.getDefault()) + "</b>")
+            .replace(SINGLE_QUOTE, BLANK_SPACE)
+            .replace(NEW_LINE_PLAIN, NEW_LINE_HTML)
+            .replace("(?i)$term".toRegex(), BOLD_TAG + term!!.uppercase(Locale.getDefault()) + CLOSE_BOLD_TAG)
         builder.append(textWithBold)
-        builder.append("</font></div></html>")
+        builder.append(HTML_CLOSE_TAGS)
         return builder.toString()
     }
 
@@ -189,5 +207,3 @@ data class WikipediaArtist(
     var isLocallyStored: Boolean = false,
     var description: String
 )
-
-
