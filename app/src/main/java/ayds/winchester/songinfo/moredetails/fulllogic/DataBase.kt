@@ -5,15 +5,12 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
-import java.io.IOException
 
 private const val ARTISTS_TABLE = "artists"
 private const val ID_COLUMN = "id"
 private const val ARTIST_COLUMN = "artist"
 private const val INFO_COLUMN = "info"
 private const val SOURCE_COLUMN = "source"
-
 private val projection = arrayOf(
     ID_COLUMN,
     ARTIST_COLUMN,
@@ -25,7 +22,6 @@ private val projection = arrayOf(
             "$ARTIST_COLUMN string," +
             "$INFO_COLUMN string," +
             "$SOURCE_COLUMN string)"
-
 private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 1
 
@@ -45,18 +41,19 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
     }
 
     fun getInfo(artist: String): String? {
+        val cursor = getArtistCursor(artist)
+        return mapArtistInfo(cursor)
+    }
 
-        val cursor = readableDatabase.query(
+    private fun getArtistCursor(artist: String) =
+        readableDatabase.query(
             ARTISTS_TABLE,
             projection,
             "$ARTIST_COLUMN = ?",
             arrayOf(artist),
             null,
             null,
-            "artist DESC"
-        )
-        return mapArtistInfo(cursor)
-    }
+            "artist DESC")
 
     private fun mapArtistInfo(cursor: Cursor): String? {
         val items: MutableList<String> = ArrayList()
@@ -67,6 +64,6 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
             items.add(info)
         }
         cursor.close()
-        return if (items.isEmpty()) null else items[0]
+        return items.firstOrNull()
     }
 }
