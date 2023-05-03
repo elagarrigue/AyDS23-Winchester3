@@ -16,12 +16,12 @@ private val projection = arrayOf(
     ARTIST_COLUMN,
     INFO_COLUMN,
 )
- private const val createArtistInfoTableQuery: String =
+private const val createArtistInfoTableQuery: String =
     "create table $ARTISTS_TABLE (" +
-            "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "$ARTIST_COLUMN string," +
-            "$INFO_COLUMN string," +
-            "$SOURCE_COLUMN string)"
+                "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "$ARTIST_COLUMN string," +
+                "$INFO_COLUMN string," +
+                "$SOURCE_COLUMN string)"
 private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 1
 
