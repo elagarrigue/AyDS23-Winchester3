@@ -68,17 +68,27 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun showArtistInfo() {
+        val artist = getArtistInfoFromRepository()
+        val uiState = createUIState(artist)
+        updateUIComponents(uiState)
+    }
+
+    private fun createUIState(artist: WikipediaArtist?): UIState {
+        val description = formatArtistInfo(artist)
+        return UIState(description, artist?.wikipediaURL)
+    }
+
+    private fun getArtistInfoFromRepository(): WikipediaArtist? {
         val artistName = getArtistNameFromIntent()
         val artist = searchArtistInfo(artistName)
         saveArtistInfo(artist)
-        val description = formatArtistInfo(artist)
-        updateUIComponents(description, artist?.wikipediaURL)
+        return artist
     }
 
-    private fun updateUIComponents(description: String, url:String?) {
-        loadWikipediaLogo()
-        updateArtistDescription(description)
-        setButtonUrl(url)
+    private fun updateUIComponents(uiState: UIState) {
+        loadWikipediaLogo(uiState.urlImage)
+        updateArtistDescription(uiState.description)
+        setButtonUrl(uiState.urlOpenButton)
     }
 
     private fun formatArtistInfo(artist: WikipediaArtist?): String {
@@ -186,9 +196,9 @@ class OtherInfoWindow : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun loadWikipediaLogo() {
+    private fun loadWikipediaLogo(urlImage: String) {
         runOnUiThread {
-            Picasso.get().load(WIKIPEDIA_LOGO_URL).into(logoImageView)
+            Picasso.get().load(urlImage).into(logoImageView)
         }
     }
 
@@ -208,4 +218,10 @@ data class WikipediaArtist(
     var wikipediaURL: String = BASE_URL,
     var isLocallyStored: Boolean = false,
     var description: String
+)
+
+data class UIState(
+    val description: String,
+    val urlOpenButton: String? = BASE_URL,
+    val urlImage: String = WIKIPEDIA_LOGO_URL,
 )
