@@ -47,29 +47,32 @@ class OtherInfoWindow : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_other_info)
         initProperties()
-        open(intent.getStringExtra(ARTIST_NAME_EXTRA).toString())
+        open()
     }
 
+    private fun getArtistNameFromIntent() = intent.getStringExtra(ARTIST_NAME_EXTRA).toString()
+
     private fun initProperties() {
+        setContentView(R.layout.activity_other_info)
         artistDescriptionTextView = findViewById(R.id.textPane2)
         logoImageView = findViewById(R.id.imageView)
         openUrlButton = findViewById(R.id.openUrlButton)
         dataBase = DataBase(this)
     }
 
-    private fun open(artist: String) {
-        getArtistInfo(artist)
+    private fun open() {
+        getArtistInfo()
     }
 
-    private fun getArtistInfo(artistName: String) {
+    private fun getArtistInfo() {
         Thread {
-            buildArtistInfo(artistName)
+            showArtistInfo()
         }.start()
     }
 
-    private fun buildArtistInfo(artistName: String) {
+    private fun showArtistInfo() {
+        val artistName = getArtistNameFromIntent()
         val artist = searchArtistInfo(artistName)
         saveArtistInfo(artist)
         val description = formatArtistInfo(artist)
@@ -111,7 +114,6 @@ class OtherInfoWindow : AppCompatActivity() {
                 try{
                     wikipediaArtist = getArtistFromWikipedia(artistName)
                 }catch (e1: IOException) {
-                    e1.printStackTrace()
                 }
             }
         }
