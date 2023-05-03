@@ -55,15 +55,12 @@ class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, nul
             null,
             "artist DESC")
 
-    private fun mapArtistInfo(cursor: Cursor): String? {
-        val items: MutableList<String> = ArrayList()
-        while (cursor.moveToNext()) {
-            val info = cursor.getString(
-                cursor.getColumnIndexOrThrow("info")
-            )
-            items.add(info)
+    private fun mapArtistInfo(cursor: Cursor): String? =
+        with(cursor) {
+            if (moveToNext()) {
+                getString(cursor.getColumnIndexOrThrow(INFO_COLUMN))
+            } else {
+                null
+            }
         }
-        cursor.close()
-        return items.firstOrNull()
-    }
 }
