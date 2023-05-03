@@ -48,7 +48,7 @@ class OtherInfoWindow : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initProperties()
-        open()
+        openArtistInfoWindow()
     }
 
     private fun getArtistNameFromIntent() = intent.getStringExtra(ARTIST_NAME_EXTRA).toString()
@@ -61,11 +61,7 @@ class OtherInfoWindow : AppCompatActivity() {
         dataBase = DataBase(this)
     }
 
-    private fun open() {
-        getArtistInfo()
-    }
-
-    private fun getArtistInfo() {
+    private fun openArtistInfoWindow() {
         Thread {
             showArtistInfo()
         }.start()
@@ -76,10 +72,10 @@ class OtherInfoWindow : AppCompatActivity() {
         val artist = searchArtistInfo(artistName)
         saveArtistInfo(artist)
         val description = formatArtistInfo(artist)
-        displayWindow(description, artist?.wikipediaURL)
+        updateUIComponents(description, artist?.wikipediaURL)
     }
 
-    private fun displayWindow(description: String,url:String?) {
+    private fun updateUIComponents(description: String, url:String?) {
         loadWikipediaLogo()
         updateArtistDescription(description)
         setButtonUrl(url)
