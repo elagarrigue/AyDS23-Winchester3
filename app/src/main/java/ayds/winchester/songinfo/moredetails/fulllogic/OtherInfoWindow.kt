@@ -28,7 +28,7 @@ private const val IS_LOCALLY_STORED_PREFIX = "[*]"
 private const val IS_NOT_LOCALLY_STORED_PREFIX = ""
 private const val NO_RESULTS_MESSAGE = "No Results"
 private const val HTML_DIV_DESCRIPTION = "<html><div width=400>"
-private const val HTML_FONT = "<font face=\"arial\""
+private const val HTML_FONT = "<font face=\"arial\">"
 private const val HTML_CLOSE_TAGS = "</font></div></html>"
 private const val NEW_LINE_PLAIN = "\n"
 private const val NEW_LINE_HTML = "<br>"
@@ -68,24 +68,24 @@ class OtherInfoWindow : AppCompatActivity() {
     }
 
     private fun showArtistInfo() {
-        val artist = getArtistInfoFromRepository()
+        val artistName = getArtistNameFromIntent()
+        val artist = getArtistInfoFromRepository(artistName)
         val uiState = createUIState(artist)
         updateUIComponents(uiState)
     }
 
-    private fun createUIState(artist: WikipediaArtist?): UIState {
+    private fun createUIState(artist: WikipediaArtist?): OtherInfoWindowUIState {
         val description = formatArtistInfo(artist)
-        return UIState(description, artist?.wikipediaURL)
+        return OtherInfoWindowUIState(description, artist?.wikipediaURL)
     }
 
-    private fun getArtistInfoFromRepository(): WikipediaArtist? {
-        val artistName = getArtistNameFromIntent()
+    private fun getArtistInfoFromRepository(artistName: String): WikipediaArtist? {
         val artist = searchArtistInfo(artistName)
         saveArtistInfo(artist)
         return artist
     }
 
-    private fun updateUIComponents(uiState: UIState) {
+    private fun updateUIComponents(uiState: OtherInfoWindowUIState) {
         loadWikipediaLogo(uiState.urlImage)
         updateArtistDescription(uiState.description)
         setButtonUrl(uiState.urlOpenButton)
@@ -220,7 +220,7 @@ data class WikipediaArtist(
     var description: String
 )
 
-data class UIState(
+data class OtherInfoWindowUIState(
     val description: String,
     val urlOpenButton: String? = BASE_URL,
     val urlImage: String = WIKIPEDIA_LOGO_URL,
