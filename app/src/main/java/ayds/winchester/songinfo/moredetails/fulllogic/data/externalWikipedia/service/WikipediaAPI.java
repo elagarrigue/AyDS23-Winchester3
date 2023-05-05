@@ -1,5 +1,4 @@
-package ayds.winchester.songinfo.moredetails.fulllogic;
-
+package ayds.winchester.songinfo.moredetails.fulllogic.data.externalWikipedia.service;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
