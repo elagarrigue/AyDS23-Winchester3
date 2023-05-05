@@ -4,5 +4,6 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaA
 
 
 interface Repository {
-    fun getArtistInfo(artistName:String): WikipediaArtist?
+    fun getArtistInfoFromRepository(artistName:String): WikipediaArtist?
+
 }
