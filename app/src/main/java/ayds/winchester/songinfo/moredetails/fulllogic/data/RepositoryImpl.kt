@@ -1,5 +1,6 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data
 
+import ayds.winchester.songinfo.moredetails.fulllogic.data.externalWikipedia.WikipediaService
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.ArtistLocalStorage
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
@@ -8,7 +9,7 @@ import java.io.IOException
 internal class RepositoryImpl
     (
     private val artistLocalStorage : ArtistLocalStorage,
-
+    private val wikipediaService : WikipediaService
     ): Repository {
 
     private fun searchArtistInfo(artistName: String): WikipediaArtist? {
@@ -17,7 +18,7 @@ internal class RepositoryImpl
             wikipediaArtist != null ->  wikipediaArtist.markArtistAsLocal()
             else -> {
                 try{
-                    wikipediaArtist = getArtistFromWikipedia(artistName)
+                    wikipediaArtist = wikipediaService.getArtistFromWikipedia(artistName)
                 }catch (e1: IOException) {
                 }
             }
