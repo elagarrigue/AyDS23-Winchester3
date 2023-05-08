@@ -1,6 +1,5 @@
-package ayds.winchester.songinfo.moredetails.fulllogic.presentation
-import ayds.winchester.songinfo.moredetails.fulllogic.OtherInfoWindowUIState
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
+package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
+
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
 import java.util.*
 
@@ -18,48 +17,34 @@ private const val BOLD_TAG = "<b>"
 private const val CLOSE_BOLD_TAG = "</b>"
 private const val SLASH_NEW_LINE = "\\n"
 
-interface Presenter {
-    fun showArtistInfo(artistName:String)
+interface ArtistDescriptionFormatter {
+
+    fun formatDescription(artist: WikipediaArtist?):String
 }
 
-class PresenterImpl(val artistRepository: Repository):Presenter {
+class ArtistDescriptionFormatterHtml:ArtistDescriptionFormatter {
 
-    override fun showArtistInfo(artistName:String) {
-        val artist = artistRepository.getArtistInfo(artistName)
-        val uiState = createUIState(artist)
-    }
-
-    private fun createUIState(artist: WikipediaArtist?): OtherInfoWindowUIState {
-        val description = formatArtistInfo(artist)
-        return OtherInfoWindowUIState(description, artist?.wikipediaURL)
-    }
-
-    private fun formatArtistInfo(artist: WikipediaArtist?): String {
+    override fun formatDescription(artist: WikipediaArtist?): String {
         return when(artist){
             is WikipediaArtist ->
                 (if (artist.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX) +
-                        formatDescription(artist.description, artist.name)
+                        artistInfoToHtml(artist.description, artist.name)
 
             else -> NO_RESULTS_MESSAGE
         }
     }
 
-    private fun formatDescription(description: String, artistName: String): String {
+    private fun artistInfoToHtml(description: String, term: String): String {
         val text = description.replace(SLASH_NEW_LINE, NEW_LINE_PLAIN)
-        return textToHtml(text, artistName)
-    }
-
-    private fun textToHtml(text: String, term: String?): String {
         val builder = StringBuilder()
         builder.append(HTML_DIV_DESCRIPTION)
         builder.append(HTML_FONT)
         val textWithBold = text
             .replace(SINGLE_QUOTE, BLANK_SPACE)
             .replace(NEW_LINE_PLAIN, NEW_LINE_HTML)
-            .replace("(?i)$term".toRegex(), BOLD_TAG + term!!.uppercase(Locale.getDefault()) + CLOSE_BOLD_TAG)
+            .replace("(?i)$term".toRegex(), BOLD_TAG + term.uppercase(Locale.getDefault()) + CLOSE_BOLD_TAG)
         builder.append(textWithBold)
         builder.append(HTML_CLOSE_TAGS)
         return builder.toString()
     }
-
 }

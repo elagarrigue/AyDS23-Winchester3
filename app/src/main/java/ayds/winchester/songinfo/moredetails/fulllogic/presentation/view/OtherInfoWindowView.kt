@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.moredetails.fulllogic.presentation
+package ayds.winchester.songinfo.moredetails.fulllogic.presentation.view
 
 import android.os.Bundle
 import android.widget.Button
@@ -7,12 +7,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.winchester.songinfo.R
 import ayds.winchester.songinfo.moredetails.fulllogic.OtherInfoWindow
+import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.Presenter
 
 interface OtherInfoWindowView {
 
 }
 
-class OtherInfoWindowViewImpl(val presenter:Presenter):OtherInfoWindowView,AppCompatActivity() {
+class OtherInfoWindowViewImpl(val presenter: Presenter):OtherInfoWindowView,AppCompatActivity() {
     private lateinit var artistDescriptionTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
