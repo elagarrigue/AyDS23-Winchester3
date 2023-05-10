@@ -6,5 +6,5 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaA
 interface ArtistLocalStorage {
 
     fun getArtistFromLocalStorage(artistName: String): WikipediaArtist?
-    fun saveArtist(artist: String?, info: String?)
+    fun saveArtist(artist: WikipediaArtist)
 }
