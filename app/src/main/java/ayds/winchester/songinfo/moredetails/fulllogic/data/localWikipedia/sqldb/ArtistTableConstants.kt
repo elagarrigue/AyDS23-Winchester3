@@ -1,5 +1,8 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.sqldb
 
+import ayds.winchester.songinfo.home.model.repository.local.spotify.sqldb.RELEASE_DATE_PRECISION_COLUMN
+import ayds.winchester.songinfo.home.model.repository.local.spotify.sqldb.SONGS_TABLE
+
 const val ARTISTS_TABLE = "artists"
 const val ID_COLUMN = "id"
 const val ARTIST_COLUMN = "artist"
@@ -19,3 +22,7 @@ const val createArtistInfoTableQuery: String =
             "$INFO_COLUMN string," +
             "$ARTIST_URL_COLUMN string," +
             "$SOURCE_COLUMN string)"
+
+const val upgradeArtistTableQuery: String =
+    "ALTER TABLE $ARTISTS_TABLE ADD COLUMN "+
+            "$ARTIST_URL_COLUMN string"

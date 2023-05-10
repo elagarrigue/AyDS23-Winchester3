@@ -8,14 +8,18 @@ import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.Artist
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
 
 private const val DATABASE_NAME="dictionary.db"
-private const val DATABASE_VERSION= 1
+private const val DATABASE_VERSION= 2
 
 class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMapper: CursorToArtistMapper ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), ArtistLocalStorage{
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createArtistInfoTableQuery)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (newVersion > oldVersion) {
+            db.execSQL(upgradeArtistTableQuery)
+        }
+    }
 
     override fun saveArtist(artist: WikipediaArtist) {
         val values = ContentValues()
