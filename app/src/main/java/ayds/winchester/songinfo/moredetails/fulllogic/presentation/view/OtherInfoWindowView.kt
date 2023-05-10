@@ -10,16 +10,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import ayds.observer.Observer
 import ayds.winchester.songinfo.R
-import ayds.winchester.songinfo.moredetails.fulllogic.OtherInfoWindow
-import ayds.winchester.songinfo.moredetails.fulllogic.OtherInfoWindowUIState
+import ayds.winchester.songinfo.moredetails.fulllogic.MoredetailsInjector
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.Presenter
 import com.squareup.picasso.Picasso
 
 interface OtherInfoWindowView {
+    var presenter:Presenter
 
 }
 
-class OtherInfoWindowViewImpl(val presenter: Presenter):OtherInfoWindowView,AppCompatActivity() {
+class OtherInfoWindowViewImpl:OtherInfoWindowView, AppCompatActivity() {
+    override lateinit var presenter: Presenter
     private lateinit var artistDescriptionTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
@@ -31,10 +32,15 @@ class OtherInfoWindowViewImpl(val presenter: Presenter):OtherInfoWindowView,AppC
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initModule()
         initProperties()
         initObservers()
         val artistName = getArtistNameFromIntent()
         openArtistInfoWindow(artistName)
+    }
+
+    private fun initModule(){
+        MoredetailsInjector.init(this)
     }
 
     private fun initProperties() {
@@ -78,7 +84,7 @@ class OtherInfoWindowViewImpl(val presenter: Presenter):OtherInfoWindowView,AppC
         startActivity(intent)
     }
 
-    private fun getArtistNameFromIntent() = intent.getStringExtra(OtherInfoWindow.ARTIST_NAME_EXTRA).toString()
+    private fun getArtistNameFromIntent() = intent.getStringExtra(OtherInfoWindowViewImpl.ARTIST_NAME_EXTRA).toString()
 
     private fun openArtistInfoWindow(artistName:String) {
         Thread {
@@ -86,4 +92,7 @@ class OtherInfoWindowViewImpl(val presenter: Presenter):OtherInfoWindowView,AppC
         }.start()
     }
 
+    companion object {
+        const val ARTIST_NAME_EXTRA = "artistName"
+    }
 }

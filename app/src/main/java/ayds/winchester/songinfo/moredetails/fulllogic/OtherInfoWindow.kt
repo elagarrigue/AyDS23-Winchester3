@@ -1,5 +1,5 @@
 package ayds.winchester.songinfo.moredetails.fulllogic
-
+/**
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -224,4 +224,4 @@ data class OtherInfoWindowUIState(
     val description: String,
     val urlOpenButton: String? = BASE_URL,
     val urlImage: String = WIKIPEDIA_LOGO_URL,
-)
+)**/
