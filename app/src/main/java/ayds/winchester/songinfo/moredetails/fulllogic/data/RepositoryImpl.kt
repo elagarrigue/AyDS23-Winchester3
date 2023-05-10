@@ -26,7 +26,7 @@ internal class RepositoryImpl
         return wikipediaArtist
     }
 
-   override fun getArtistInfoFromRepository(artistName: String): WikipediaArtist? {
+    override fun getArtistInfoFromRepository(artistName: String): WikipediaArtist? {
         val artist = searchArtistInfo(artistName)
         saveArtistInfo(artist)
         return artist
@@ -37,7 +37,6 @@ internal class RepositoryImpl
             artistLocalStorage.saveArtist(artist)
         }
     }
-
 
     private fun WikipediaArtist.markArtistAsLocal() {
         this.isLocallyStored = true

@@ -14,17 +14,17 @@ import ayds.winchester.songinfo.moredetails.fulllogic.MoredetailsInjector
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.Presenter
 import com.squareup.picasso.Picasso
 
-interface OtherInfoWindowView {
+interface MoredetailsView {
     var presenter:Presenter
 
 }
 
-class OtherInfoWindowViewImpl:OtherInfoWindowView, AppCompatActivity() {
+class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
     override lateinit var presenter: Presenter
     private lateinit var artistDescriptionTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
-    private val observer: Observer<OtherInfoWindowUIState> =
+    private val observer: Observer<MoredetailsUIState> =
         Observer { value ->
             updateUIComponents(value)
         }
@@ -54,7 +54,7 @@ class OtherInfoWindowViewImpl:OtherInfoWindowView, AppCompatActivity() {
         presenter.uiStateObservable.subscribe(observer)
     }
 
-    private fun updateUIComponents(uiState: OtherInfoWindowUIState) {
+    private fun updateUIComponents(uiState: MoredetailsUIState) {
         loadWikipediaLogo(uiState.urlImage)
         updateArtistDescription(uiState.description)
         setButtonUrl(uiState.urlOpenButton)
@@ -84,7 +84,7 @@ class OtherInfoWindowViewImpl:OtherInfoWindowView, AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun getArtistNameFromIntent() = intent.getStringExtra(OtherInfoWindowViewImpl.ARTIST_NAME_EXTRA).toString()
+    private fun getArtistNameFromIntent() = intent.getStringExtra(ARTIST_NAME_EXTRA).toString()
 
     private fun openArtistInfoWindow(artistName:String) {
         Thread {
