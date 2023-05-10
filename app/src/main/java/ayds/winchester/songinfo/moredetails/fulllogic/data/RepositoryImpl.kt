@@ -34,7 +34,7 @@ internal class RepositoryImpl
 
     private fun saveArtistInfo(artist: WikipediaArtist?) {
         artist?.let{
-            artistLocalStorage.saveArtist(artist.name, it.description)
+            artistLocalStorage.saveArtist(artist)
         }
     }
 

@@ -7,29 +7,27 @@ import android.database.sqlite.SQLiteOpenHelper
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.ArtistLocalStorage
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
 
-
-
 private const val DATABASE_NAME="dictionary.db"
-private const val DATABASE_VERSION= 1
+private const val DATABASE_VERSION= 2
 
 class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMapper: CursorToArtistMapper ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), ArtistLocalStorage{
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createArtistInfoTableQuery)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
-
-    override fun saveArtist(artist: String?, info: String?) {
-        val values = ContentValues()
-        values.put(ARTIST_COLUMN, artist)
-        values.put(INFO_COLUMN, info)
-        values.put(SOURCE_COLUMN, 1)
-        writableDatabase?.insert(ARTISTS_TABLE, null, values)
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (newVersion > oldVersion) {
+            db.execSQL(upgradeArtistTableQuery)
+        }
     }
 
-    fun getInfo(artist: String): String? {
-        val cursor = getArtistCursor(artist)
-        return cursorToArtistMapper.mapArtistInfo(cursor)
+    override fun saveArtist(artist: WikipediaArtist) {
+        val values = ContentValues()
+        values.put(ARTIST_COLUMN, artist.name)
+        values.put(INFO_COLUMN, artist.description)
+        values.put(ARTIST_URL_COLUMN, artist.wikipediaURL)
+        values.put(SOURCE_COLUMN, 1)
+        writableDatabase?.insert(ARTISTS_TABLE, null, values)
     }
 
     private fun getArtistCursor(artist: String) =
@@ -42,11 +40,8 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
             null,
             "artist DESC")
 
-
     override fun getArtistFromLocalStorage(artistName: String): WikipediaArtist? {
-        val artistDescription = this.getInfo(artistName)
-        return artistDescription?.let{
-            WikipediaArtist(name=artistName,description=artistDescription)
-        }
+        val cursor = getArtistCursor(artistName)
+        return cursorToArtistMapper.mapArtistInfo(cursor)
     }
 }
