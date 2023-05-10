@@ -1,7 +1,7 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
 import ayds.observer.Observable
 import ayds.observer.Subject
-import ayds.winchester.songinfo.moredetails.fulllogic.OtherInfoWindowUIState
+import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.OtherInfoWindowUIState
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
 
