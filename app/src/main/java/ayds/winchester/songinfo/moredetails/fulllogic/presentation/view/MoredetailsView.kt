@@ -34,6 +34,10 @@ class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
         initModule()
         initProperties()
         initObservers()
+        initWindow()
+    }
+
+    private fun initWindow() {
         val artistName = getArtistNameFromIntent()
         openArtistInfoWindow(artistName)
     }
