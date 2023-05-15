@@ -15,12 +15,11 @@ import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.Pre
 import com.squareup.picasso.Picasso
 
 interface MoredetailsView {
-    var presenter:Presenter
-
+    fun setPresenter(presenter: Presenter)
 }
 
 class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
-    override lateinit var presenter: Presenter
+    private lateinit var presenter: Presenter
     private lateinit var artistDescriptionTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
@@ -29,9 +28,9 @@ class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
             updateUIComponents(value)
         }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_other_info)
         initModule()
         initProperties()
         initObservers()
@@ -39,12 +38,15 @@ class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
         openArtistInfoWindow(artistName)
     }
 
+    override fun setPresenter(presenter: Presenter) {
+        this.presenter = presenter
+    }
+
     private fun initModule(){
         MoredetailsInjector.init(this)
     }
 
     private fun initProperties() {
-        setContentView(R.layout.activity_other_info)
         artistDescriptionTextView = findViewById(R.id.textPane2)
         logoImageView = findViewById(R.id.imageView)
         openUrlButton = findViewById(R.id.openUrlButton)

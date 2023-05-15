@@ -31,6 +31,6 @@ object MoredetailsInjector {
         val artistLocalStorage = ArtistLocalStorageImpl(moreDetailsView as Context, cursorArtistMapper)
         val repository = RepositoryImpl(artistLocalStorage, wikipediaService)
         val presenter = PresenterImpl(repository, artistDescriptionFormatter)
-        moreDetailsView.presenter = presenter
+        moreDetailsView.setPresenter(presenter)
     }
 }
