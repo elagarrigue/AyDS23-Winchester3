@@ -17,7 +17,7 @@ class PresenterImpl(private val artistRepository: Repository, private val format
     override val uiStateObservable:Observable<MoredetailsUIState> = onUIStateSubject
 
     override fun showArtistInfo(artistName:String) {
-        val artist = artistRepository.getArtistInfoFromRepository(artistName)
+        val artist = artistRepository.getArtistInfo(artistName)
         updateUIState(artist)
         onUIStateSubject.notify(uiState)
     }

@@ -6,36 +6,26 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
 import java.io.IOException
 
-internal class RepositoryImpl
-    (
+internal class RepositoryImpl(
     private val artistLocalStorage : ArtistLocalStorage,
     private val wikipediaService : WikipediaService
-    ): Repository {
+): Repository {
 
-    private fun searchArtistInfo(artistName: String): WikipediaArtist? {
-        var wikipediaArtist = artistLocalStorage.getArtistFromLocalStorage(artistName)
+    override fun getArtistInfo(artistName: String): WikipediaArtist? {
+        var wikipediaArtist = artistLocalStorage.getArtist(artistName)
         when {
             wikipediaArtist != null ->  wikipediaArtist.markArtistAsLocal()
             else -> {
                 try{
-                    wikipediaArtist = wikipediaService.getArtistFromWikipedia(artistName)
+                    wikipediaArtist = wikipediaService.getArtist(artistName)
+                    wikipediaArtist?.let{
+                        artistLocalStorage.saveArtist(wikipediaArtist)
+                    }
                 }catch (e1: IOException) {
                 }
             }
         }
         return wikipediaArtist
-    }
-
-    override fun getArtistInfoFromRepository(artistName: String): WikipediaArtist? {
-        val artist = searchArtistInfo(artistName)
-        saveArtistInfo(artist)
-        return artist
-    }
-
-    private fun saveArtistInfo(artist: WikipediaArtist?) {
-        artist?.let{
-            artistLocalStorage.saveArtist(artist)
-        }
     }
 
     private fun WikipediaArtist.markArtistAsLocal() {
