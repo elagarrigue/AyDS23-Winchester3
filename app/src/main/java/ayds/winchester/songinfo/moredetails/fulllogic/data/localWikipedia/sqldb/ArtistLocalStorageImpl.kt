@@ -40,7 +40,7 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
             null,
             "artist DESC")
 
-    override fun getArtistFromLocalStorage(artistName: String): WikipediaArtist? {
+    override fun getArtist(artistName: String): WikipediaArtist? {
         val cursor = getArtistCursor(artistName)
         return cursorToArtistMapper.mapArtistInfo(cursor)
     }
