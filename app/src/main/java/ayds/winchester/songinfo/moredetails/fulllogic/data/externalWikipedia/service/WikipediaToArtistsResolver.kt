@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 
 interface WikipediaToArtistsResolver{
-    fun getArtistFromExternalData(wikipediaData: String?): WikipediaArtist?
+    fun getArtistFromExternalData(wikipediaData: String?, artistName: String): WikipediaArtist?
 }
 
 private const val SNIPPET = "snippet"
@@ -16,10 +16,10 @@ private const val SEARCH = "search"
 
 internal class WikipediaToArtistsResolverImpl : WikipediaToArtistsResolver {
 
-    override fun getArtistFromExternalData(wikipediaData: String?): WikipediaArtist? {
+    override fun getArtistFromExternalData(wikipediaData: String?, artistName: String): WikipediaArtist? {
         val query = wikipediaData.getFirstItem()
         return query[SNIPPET]?.let {
-            WikipediaArtist(description=query.getDescription(), wikipediaURL=query.getWikipediaUrl())
+            WikipediaArtist(name=artistName, description=query.getDescription(), wikipediaURL=query.getWikipediaUrl())
         }
     }
 
