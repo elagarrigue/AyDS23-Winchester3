@@ -16,18 +16,16 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        if (newVersion > oldVersion) {
-            db.execSQL(upgradeArtistTableQuery)
-        }
     }
 
     override fun saveArtist(artist: WikipediaArtist) {
-        val values = ContentValues()
-        values.put(ARTIST_COLUMN, artist.name)
-        values.put(INFO_COLUMN, artist.description)
-        values.put(ARTIST_URL_COLUMN, artist.wikipediaURL)
-        values.put(SOURCE_COLUMN, 1)
-        writableDatabase?.insert(ARTISTS_TABLE, null, values)
+        ContentValues().apply {
+            put(ARTIST_COLUMN, artist.name)
+            put(INFO_COLUMN, artist.description)
+            put(ARTIST_URL_COLUMN, artist.wikipediaURL)
+            put(SOURCE_COLUMN, 1)
+            writableDatabase?.insert(ARTISTS_TABLE, null, this)
+        }
     }
 
     private fun getArtistCursor(artist: String) =
