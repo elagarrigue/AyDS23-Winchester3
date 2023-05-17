@@ -18,7 +18,7 @@ interface MoredetailsView {
     fun setPresenter(presenter: Presenter)
 }
 
-class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
+class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
     private lateinit var presenter: Presenter
     private lateinit var artistDescriptionTextView: TextView
     private lateinit var openUrlButton: Button
