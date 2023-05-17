@@ -1,20 +1,49 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
 import io.mockk.*
-import org.junit.After
-import org.junit.Before
+import io.mockk.mockk
+import org.junit.Assert
 import org.junit.Test
 
-internal class ArtistDescriptionFormatterHtmlTest {
+internal class  ArtistDescriptionFormatterHtmlTest {
 
-    @Before
-    fun setUp() {
-    }
+   private val artistdescriptionformat by lazy {ArtistDescriptionFormatterHtml()}
 
-    @After
-    fun tearDown() {
+    @Test
+    fun `given a locally stored wikipedia artist it should return the format description`() {
+        val artist : WikipediaArtist = WikipediaArtist(
+            name =  "Duki",
+            wikipediaURL = "https://en.wikipedia.org/?curid=64829658",
+            isLocallyStored = true,
+            description = "Gonzalo Julián Conde (born 29 August 1998), known professionally as <span class=\"searchmatch\">Bizarrap</span>, is an Argentine DJ and record producer. He specializes in EDM, Latin trap"
+        )
+
+        val result = artistdescriptionformat.formatDescription(artist);
+        val expected = "[*] <html><div width=400><font face=\"arial\">Gonzalo Julián Conde (born 29 August 1998), known professionally as <span class=\"searchmatch\">Bizarrap</span>, is an Argentine DJ and record producer. He specializes in EDM, Latin trap</font></div></html>"
+
+        Assert.assertEquals(expected, result)
     }
 
     @Test
-    fun formatDescription() {
+    fun `given a non locally stored wikipedia artist it should return the format description`() {
+        val artist : WikipediaArtist = WikipediaArtist(
+            name =  "Duki",
+            wikipediaURL = "https://en.wikipedia.org/?curid=64829658",
+            isLocallyStored = false,
+            description = "Gonzalo Julián Conde (born 29 August 1998), known professionally as <span class=\"searchmatch\">Bizarrap</span>, is an Argentine DJ and record producer. He specializes in EDM, Latin trap"
+        )
+
+        val result = artistdescriptionformat.formatDescription(artist);
+        val expected = " <html><div width=400><font face=\"arial\">Gonzalo Julián Conde (born 29 August 1998), known professionally as <span class=\"searchmatch\">Bizarrap</span>, is an Argentine DJ and record producer. He specializes in EDM, Latin trap</font></div></html>"
+
+        Assert.assertEquals(expected, result)
+    }
+    @Test
+    fun `given a non wikipedia artist it should return not found description`() {
+        val artist : WikipediaArtist = mockk();
+        val result = artistdescriptionformat.formatDescription(artist);
+        val expected = "No Results"
+
+        Assert.assertEquals(expected, result)
     }
 }
