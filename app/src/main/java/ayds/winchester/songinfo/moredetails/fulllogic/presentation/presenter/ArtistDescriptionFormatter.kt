@@ -27,24 +27,28 @@ class ArtistDescriptionFormatterHtml:ArtistDescriptionFormatter {
     override fun formatDescription(artist: WikipediaArtist?): String {
         return when(artist){
             is WikipediaArtist ->
-                (if (artist.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX) +
-                        artistInfoToHtml(artist.description, artist.name)
-
+                "${if(artist.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX} " +
+                "${artistInfoToHtml(artist.description, artist.name)}"
             else -> NO_RESULTS_MESSAGE
         }
     }
 
-    private fun artistInfoToHtml(description: String, term: String): String {
-        val text = description.replace(SLASH_NEW_LINE, NEW_LINE_PLAIN)
+    private fun artistInfoToHtml(description: String, artistName: String): String {
+        val textWithBold = formatArtistText(description, artistName)
         val builder = StringBuilder()
-        builder.append(HTML_DIV_DESCRIPTION)
-        builder.append(HTML_FONT)
-        val textWithBold = text
+        return builder
+            .append(HTML_DIV_DESCRIPTION)
+            .append(HTML_FONT)
+            .append(textWithBold)
+            .append(HTML_CLOSE_TAGS)
+            .toString()
+    }
+
+    private fun formatArtistText(description: String, artistName: String): String {
+        return description
+            .replace(SLASH_NEW_LINE, NEW_LINE_PLAIN)
             .replace(SINGLE_QUOTE, BLANK_SPACE)
             .replace(NEW_LINE_PLAIN, NEW_LINE_HTML)
-            .replace("(?i)$term".toRegex(), BOLD_TAG + term.uppercase(Locale.getDefault()) + CLOSE_BOLD_TAG)
-        builder.append(textWithBold)
-        builder.append(HTML_CLOSE_TAGS)
-        return builder.toString()
+            .replace("(?i)$artistName".toRegex(), BOLD_TAG + artistName.uppercase(Locale.getDefault()) + CLOSE_BOLD_TAG)
     }
 }
