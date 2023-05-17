@@ -20,7 +20,7 @@ class PresenterImpl(private val artistRepository: Repository, private val format
     override fun showArtistInfo(artistName:String) {
         Thread {
             displayArtistInfo(artistName)
-        }
+        }.start()
     }
 
     private fun displayArtistInfo(artistName: String) {
