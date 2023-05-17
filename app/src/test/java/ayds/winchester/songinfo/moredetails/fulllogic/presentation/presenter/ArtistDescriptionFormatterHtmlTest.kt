@@ -40,7 +40,7 @@ internal class  ArtistDescriptionFormatterHtmlTest {
     }
     @Test
     fun `given a non wikipedia artist it should return not found description`() {
-        val artist : WikipediaArtist = mockk();
+        val artist : WikipediaArtist? = null;
         val result = artistdescriptionformat.formatDescription(artist);
         val expected = "No Results"
 
