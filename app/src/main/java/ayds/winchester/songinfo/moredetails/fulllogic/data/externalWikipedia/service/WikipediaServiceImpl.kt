@@ -11,7 +11,7 @@ class WikipediaServiceImpl(
 
     override fun getArtist(artistName: String): WikipediaArtist? {
         val callResponse = getArtistInfoFromAPI(artistName)
-        return wikipediaToArtistsResolver.getArtistFromExternalData(callResponse.body())
+        return wikipediaToArtistsResolver.getArtistFromExternalData(callResponse.body(), artistName)
     }
 
     private fun getArtistInfoFromAPI(artistName: String?): Response<String?> =

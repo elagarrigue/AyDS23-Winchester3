@@ -18,7 +18,7 @@ interface MoredetailsView {
     fun setPresenter(presenter: Presenter)
 }
 
-class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
+class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
     private lateinit var presenter: Presenter
     private lateinit var artistDescriptionTextView: TextView
     private lateinit var openUrlButton: Button
@@ -93,9 +93,7 @@ class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
     private fun getArtistNameFromIntent() = intent.getStringExtra(ARTIST_NAME_EXTRA).toString()
 
     private fun openArtistInfoWindow(artistName:String) {
-        Thread {
-            presenter.showArtistInfo(artistName)
-        }.start()
+        presenter.showArtistInfo(artistName)
     }
 
     companion object {
