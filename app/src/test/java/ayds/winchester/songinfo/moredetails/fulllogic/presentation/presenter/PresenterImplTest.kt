@@ -1,6 +1,7 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
 import ayds.observer.Observable
 import ayds.observer.Observer
+import ayds.winchester.songinfo.moredetails.fulllogic.data.RepositoryImpl
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoredetailsUIState
@@ -10,10 +11,13 @@ import io.mockk.verify
 import org.junit.Test
 
 internal class PresenterImplTest {
-    private lateinit var presenter: PresenterImpl
-    private lateinit var artistRepository: Repository
-    private lateinit var formatter: ArtistDescriptionFormatterHtml
+    private var artistRepository: Repository = mockk(relaxUnitFun = true)
+    private var formatter: ArtistDescriptionFormatterHtml = mockk(relaxUnitFun = true)
     private lateinit var uiStateObservable: Observable<MoredetailsUIState>
+    private var presenter: Presenter = mockk(relaxUnitFun = true) {
+        PresenterImpl(artistRepository,formatter)
+        every { uiStateObservable } returns uiStateObservable
+    }
 
     @Test
     fun `showArtistInfo updates UI state with artist information`() {
