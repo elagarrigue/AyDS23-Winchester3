@@ -1,4 +1,4 @@
-package ayds.winchester.songinfo.moredetails.fulllogic
+package ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia
 
 import android.content.ContentValues
 import android.content.Context
@@ -18,16 +18,16 @@ private val projection = arrayOf(
 )
 private const val createArtistInfoTableQuery: String =
     "create table $ARTISTS_TABLE (" +
-                "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$ARTIST_COLUMN string," +
-                "$INFO_COLUMN string," +
-                "$SOURCE_COLUMN string)"
+            "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "$ARTIST_COLUMN string," +
+            "$INFO_COLUMN string," +
+            "$SOURCE_COLUMN string)"
 private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 1
 
 class DataBase(context: Context?) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
-             db.execSQL(createArtistInfoTableQuery)
+        db.execSQL(createArtistInfoTableQuery)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
