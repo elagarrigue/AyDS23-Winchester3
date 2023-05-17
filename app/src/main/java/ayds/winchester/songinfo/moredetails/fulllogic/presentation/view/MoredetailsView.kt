@@ -89,9 +89,7 @@ class MoredetailsViewImpl:MoredetailsView, AppCompatActivity() {
     private fun getArtistNameFromIntent() = intent.getStringExtra(ARTIST_NAME_EXTRA).toString()
 
     private fun openArtistInfoWindow(artistName:String) {
-        Thread {
-            presenter.showArtistInfo(artistName)
-        }.start()
+        presenter.showArtistInfo(artistName)
     }
 
     companion object {

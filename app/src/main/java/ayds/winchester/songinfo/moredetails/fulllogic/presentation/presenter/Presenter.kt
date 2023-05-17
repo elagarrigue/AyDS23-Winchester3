@@ -8,15 +8,22 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaA
 
 interface Presenter {
     val uiStateObservable: Observable<MoredetailsUIState>
+    var uiState: MoredetailsUIState
     fun showArtistInfo(artistName:String)
 }
 
 class PresenterImpl(private val artistRepository: Repository, private val formatter: ArtistDescriptionFormatterHtml):Presenter {
-    private var uiState = MoredetailsUIState()
+    override var uiState = MoredetailsUIState()
     private val onUIStateSubject = Subject<MoredetailsUIState>()
     override val uiStateObservable:Observable<MoredetailsUIState> = onUIStateSubject
 
     override fun showArtistInfo(artistName:String) {
+        Thread {
+            displayArtistInfo(artistName)
+        }
+    }
+
+    private fun displayArtistInfo(artistName: String) {
         val artist = artistRepository.getArtistInfo(artistName)
         updateUIState(artist)
         onUIStateSubject.notify(uiState)
