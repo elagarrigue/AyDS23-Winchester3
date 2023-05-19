@@ -2,17 +2,22 @@ package ayds.winchester.songinfo.home.view
 
 import ayds.winchester.songinfo.home.model.entities.Song
 import ayds.winchester.songinfo.home.model.entities.Song.SpotifySong
+import ayds.winchester.songinfo.home.view.formatter.PrecisionFormatter
 import ayds.winchester.songinfo.home.view.formatter.PrecisionFormatterFactory
 import ayds.winchester.songinfo.home.view.formatter.PrecisionFormatterFactoryImpl
+import ayds.winchester.songinfo.home.view.formatter.YearFormatter
+import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 class SongDescriptionHelperTest {
 
-    private val dateFormatterFactory by lazy { PrecisionFormatterFactoryImpl }
-    private val songDescriptionHelper by lazy { SongDescriptionHelperImpl(dateFormatterFactory) }
-
+    private val dateFormatterFactory :PrecisionFormatterFactoryImpl = mockk()
+    private val songDescriptionHelper by lazy {
+        SongDescriptionHelperImpl(dateFormatterFactory)
+    }
 
     @Test
     fun `given a local song it should return the description`() {
@@ -27,6 +32,7 @@ class SongDescriptionHelperTest {
             "url",
             true,
         )
+        every { dateFormatterFactory.getPrecisionFormatter("day").formatWithPrecision("1992-01-01") } returns "01/01/1992"
 
         val result = songDescriptionHelper.getSongDescriptionText(song)
 
@@ -52,6 +58,7 @@ class SongDescriptionHelperTest {
             "url",
             false,
         )
+        every { dateFormatterFactory.getPrecisionFormatter("day").formatWithPrecision("1992-01-01") } returns "01/01/1992"
 
         val result = songDescriptionHelper.getSongDescriptionText(song)
 
