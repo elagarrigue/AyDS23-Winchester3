@@ -2,14 +2,10 @@ package ayds.winchester.songinfo.home.view
 
 import ayds.winchester.songinfo.home.model.entities.Song
 import ayds.winchester.songinfo.home.model.entities.Song.SpotifySong
-import ayds.winchester.songinfo.home.view.formatter.PrecisionFormatter
-import ayds.winchester.songinfo.home.view.formatter.PrecisionFormatterFactory
 import ayds.winchester.songinfo.home.view.formatter.PrecisionFormatterFactoryImpl
-import ayds.winchester.songinfo.home.view.formatter.YearFormatter
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
 
 class SongDescriptionHelperTest {
