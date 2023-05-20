@@ -19,7 +19,7 @@ internal class RepositoryImpl(
             else -> {
                 try{
                     val wikipediaArtist:WikipediaArtist? = wikipediaService.getArtist(artistName)
-                    artist = mapWikipediaArtist(wikipediaArtist)
+                    artist = wikipediaArtist?.mapWikipediaArtist()
                     artist?.let{
                         artistLocalStorage.saveArtist(artist)
                     }
@@ -34,14 +34,12 @@ internal class RepositoryImpl(
         this.isLocallyStored = true
     }
 
-    private fun mapWikipediaArtist(submoduleArtist: WikipediaArtist?):Artist?{
-        return submoduleArtist?.let{
-            Artist(
-                submoduleArtist.name,
-                submoduleArtist.wikipediaURL,
+    private fun WikipediaArtist.mapWikipediaArtist():Artist{
+        return Artist(
+                this.name,
+                this.wikipediaURL,
                 false,
-                submoduleArtist.description
+                this.description
             )
-        }
     }
 }
