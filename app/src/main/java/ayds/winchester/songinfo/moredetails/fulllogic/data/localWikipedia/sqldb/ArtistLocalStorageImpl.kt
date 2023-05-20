@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.ArtistLocalStorage
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Artist
 
 private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 2
@@ -18,7 +18,7 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
     }
 
-    override fun saveArtist(artist: WikipediaArtist) {
+    override fun saveArtist(artist: Artist) {
         ContentValues().apply {
             put(ARTIST_COLUMN, artist.name)
             put(INFO_COLUMN, artist.description)
@@ -38,7 +38,7 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
             null,
             "artist DESC")
 
-    override fun getArtist(artistName: String): WikipediaArtist? {
+    override fun getArtist(artistName: String): Artist? {
         val cursor = getArtistCursor(artistName)
         return cursorToArtistMapper.mapArtistInfo(cursor)
     }

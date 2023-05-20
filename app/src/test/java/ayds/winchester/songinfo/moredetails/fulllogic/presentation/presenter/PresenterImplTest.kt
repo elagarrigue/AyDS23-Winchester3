@@ -1,7 +1,7 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
 
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Artist
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoredetailsUIState
 import io.mockk.every
 import io.mockk.mockk
@@ -21,7 +21,7 @@ internal class PresenterImplTest {
     @Test
     fun `on showArtistInfo it should notify new uiState`() {
         val artistName = "Artist Name"
-        val artist=WikipediaArtist(wikipediaURL = "wikiUrl", description = "")
+        val artist=Artist(wikipediaURL = "wikiUrl", description = "")
         val formattedDescription = "Description"
         every { artistRepository.getArtistInfo(artistName) } returns artist
         every { formatter.formatDescription(artist) } returns formattedDescription

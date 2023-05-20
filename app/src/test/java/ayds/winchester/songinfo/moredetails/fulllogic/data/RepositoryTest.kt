@@ -1,9 +1,8 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data
 
-import ayds.winchester.songinfo.moredetails.fulllogic.data.externalWikipedia.WikipediaService
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.ArtistLocalStorage
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Artist
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -14,7 +13,7 @@ import java.io.IOException
 
 internal class RepositoryTest {
     private val artistLocalStorage: ArtistLocalStorage = mockk(relaxUnitFun = true)
-    private val wikipediaService: WikipediaService = mockk(relaxUnitFun = true)
+    private val wikipediaService: ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService = mockk(relaxUnitFun = true)
     private val artistRepository: Repository by lazy {
         RepositoryImpl(artistLocalStorage, wikipediaService)
     }
@@ -22,7 +21,7 @@ internal class RepositoryTest {
     @Test
     fun `given an existing artist in the local repository it should return it and mark it as local`() {
         val artistName = "name"
-        val artist = WikipediaArtist(name = artistName, wikipediaURL = "wikiUrl", description = "desc")
+        val artist = Artist(name = artistName, wikipediaURL = "wikiUrl", description = "desc")
         every { artistLocalStorage.getArtist(artistName) } returns artist
 
         val result = artistRepository.getArtistInfo(artistName)
@@ -34,7 +33,7 @@ internal class RepositoryTest {
     @Test
     fun `given an artist that is not in the local repository but can be obtained from the external service, it should return the song, store it but not mark it as local`(){
         val artistName = "name"
-        val artist = WikipediaArtist(name = artistName, wikipediaURL = "wikiUrl", description = "desc")
+        val artist = Artist(name = artistName, wikipediaURL = "wikiUrl", description = "desc")
         every { artistLocalStorage.getArtist(artistName) } returns null
         every { wikipediaService.getArtist(artistName) } returns artist
 

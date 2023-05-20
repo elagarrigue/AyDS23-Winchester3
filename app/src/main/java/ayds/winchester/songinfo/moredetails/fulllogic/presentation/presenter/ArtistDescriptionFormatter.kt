@@ -1,6 +1,6 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
 
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Artist
 import java.util.*
 
 private const val IS_LOCALLY_STORED_PREFIX = "[*]"
@@ -19,14 +19,14 @@ private const val SLASH_NEW_LINE = "\\n"
 
 interface ArtistDescriptionFormatter {
 
-    fun formatDescription(artist: WikipediaArtist?):String
+    fun formatDescription(artist: Artist?):String
 }
 
 class ArtistDescriptionFormatterHtml:ArtistDescriptionFormatter {
 
-    override fun formatDescription(artist: WikipediaArtist?): String {
+    override fun formatDescription(artist: Artist?): String {
         return when(artist){
-            is WikipediaArtist ->
+            is Artist ->
                 "${if(artist.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX} " +
                 "${artistInfoToHtml(artist.description, artist.name)}"
             else -> NO_RESULTS_MESSAGE

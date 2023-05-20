@@ -1,7 +1,5 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.WikipediaArtist
-import io.mockk.*
-import io.mockk.mockk
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Artist
 import org.junit.Assert
 import org.junit.Test
 
@@ -11,7 +9,7 @@ internal class  ArtistDescriptionFormatterHtmlTest {
 
     @Test
     fun `given a locally stored wikipedia artist it should return the format description`() {
-        val artist : WikipediaArtist = WikipediaArtist(
+        val artist : Artist = Artist(
             name =  "Duki",
             wikipediaURL = "https://en.wikipedia.org/?curid=64829658",
             isLocallyStored = true,
@@ -26,7 +24,7 @@ internal class  ArtistDescriptionFormatterHtmlTest {
 
     @Test
     fun `given a non locally stored wikipedia artist it should return the format description`() {
-        val artist : WikipediaArtist = WikipediaArtist(
+        val artist : Artist = Artist(
             name =  "Duki",
             wikipediaURL = "https://en.wikipedia.org/?curid=64829658",
             isLocallyStored = false,
@@ -40,7 +38,7 @@ internal class  ArtistDescriptionFormatterHtmlTest {
     }
     @Test
     fun `given a non wikipedia artist it should return not found description`() {
-        val artist : WikipediaArtist? = null;
+        val artist : Artist? = null;
         val result = artistdescriptionformat.formatDescription(artist);
         val expected = "No Results"
 

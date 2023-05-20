@@ -2,9 +2,6 @@ package ayds.winchester.songinfo.moredetails.fulllogic
 
 import android.content.Context
 import ayds.winchester.songinfo.moredetails.fulllogic.data.RepositoryImpl
-import ayds.winchester.songinfo.moredetails.fulllogic.data.externalWikipedia.WikipediaService
-import ayds.winchester.songinfo.moredetails.fulllogic.data.externalWikipedia.service.*
-import ayds.winchester.songinfo.moredetails.fulllogic.data.externalWikipedia.service.WikipediaToArtistsResolverImpl
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.sqldb.ArtistLocalStorageImpl
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.sqldb.CursorToArtistMapper
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.sqldb.CursorToArtistMapperImpl
@@ -22,9 +19,14 @@ object MoredetailsInjector {
         .baseUrl(BASE_URL_RETROFIT)
         .addConverterFactory(ScalarsConverterFactory.create())
         .build()
-    private val wikipediaAPI = retrofit.create(WikipediaAPI::class.java)
-    private val wikipediaToSongResolver: WikipediaToArtistsResolver = WikipediaToArtistsResolverImpl()
-    private val wikipediaService : WikipediaService = WikipediaServiceImpl(wikipediaToSongResolver, wikipediaAPI)
+    private val wikipediaAPI = retrofit.create(ayds.winchester3.wikiartist.artist.externalWikipedia.service.WikipediaAPI::class.java)
+    private val wikipediaToSongResolver: ayds.winchester3.wikiartist.artist.externalWikipedia.service.WikipediaToArtistsResolver =
+        ayds.winchester3.wikiartist.artist.externalWikipedia.service.WikipediaToArtistsResolverImpl()
+    private val wikipediaService : ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService =
+        ayds.winchester3.wikiartist.artist.externalWikipedia.service.WikipediaServiceImpl(
+            wikipediaToSongResolver,
+            wikipediaAPI
+        )
     private val artistDescriptionFormatter = ArtistDescriptionFormatterHtml()
 
     fun init(moreDetailsView: MoredetailsView){
