@@ -1,0 +1,3 @@
+[submodule "libs/WikipediaData"]
+	path = libs/WikipediaData
+	url = git@github.com:JanoALockhart/AyDS-Wikipedia.git
