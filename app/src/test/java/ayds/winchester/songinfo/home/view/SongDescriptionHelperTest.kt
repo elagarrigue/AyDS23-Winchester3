@@ -2,13 +2,18 @@ package ayds.winchester.songinfo.home.view
 
 import ayds.winchester.songinfo.home.model.entities.Song
 import ayds.winchester.songinfo.home.model.entities.Song.SpotifySong
+import ayds.winchester.songinfo.home.view.formatter.PrecisionFormatterFactoryImpl
+import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Test
 
 class SongDescriptionHelperTest {
 
-    private val songDescriptionHelper by lazy { SongDescriptionHelperImpl() }
+    private val dateFormatterFactory :PrecisionFormatterFactoryImpl = mockk()
+    private val songDescriptionHelper by lazy {
+        SongDescriptionHelperImpl(dateFormatterFactory)
+    }
 
     @Test
     fun `given a local song it should return the description`() {
@@ -18,10 +23,12 @@ class SongDescriptionHelperTest {
             "Stone Temple Pilots",
             "Core",
             "1992-01-01",
+            "day",
             "url",
             "url",
             true,
         )
+        every { dateFormatterFactory.getPrecisionFormatter("day").formatWithPrecision("1992-01-01") } returns "01/01/1992"
 
         val result = songDescriptionHelper.getSongDescriptionText(song)
 
@@ -29,7 +36,7 @@ class SongDescriptionHelperTest {
             "Song: Plush [*]\n" +
                     "Artist: Stone Temple Pilots\n" +
                     "Album: Core\n" +
-                    "Year: 1992"
+                    "Release date: 01/01/1992"
 
         Assert.assertEquals(expected, result)
     }
@@ -42,10 +49,12 @@ class SongDescriptionHelperTest {
             "Stone Temple Pilots",
             "Core",
             "1992-01-01",
+            "day",
             "url",
             "url",
             false,
         )
+        every { dateFormatterFactory.getPrecisionFormatter("day").formatWithPrecision("1992-01-01") } returns "01/01/1992"
 
         val result = songDescriptionHelper.getSongDescriptionText(song)
 
@@ -53,7 +62,7 @@ class SongDescriptionHelperTest {
             "Song: Plush \n" +
                     "Artist: Stone Temple Pilots\n" +
                     "Album: Core\n" +
-                    "Year: 1992"
+                    "Release date: 01/01/1992"
 
         Assert.assertEquals(expected, result)
     }
