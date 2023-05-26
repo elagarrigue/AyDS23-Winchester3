@@ -20,9 +20,10 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
 
     //TODO revisar saveArtist, recibir el nombre como parametro?
     //TODO recibe como parametro Card (y se lo llama muchas veces) o Collection<Card>
-    override fun saveArtist(card: Card) {
+    override fun saveArtist(card: Card, artistName: String) {
         ContentValues().apply {
-            put(ARTIST_COLUMN, card.name)
+            put(ARTIST_COLUMN, artistName)
+            put(SOURCE_LOGO_URL_COLUMN, card.sourceLogoURL)
             put(INFO_COLUMN, card.description)
             put(ARTIST_URL_COLUMN, card.infoURL)
             put(SOURCE_COLUMN, 1)
