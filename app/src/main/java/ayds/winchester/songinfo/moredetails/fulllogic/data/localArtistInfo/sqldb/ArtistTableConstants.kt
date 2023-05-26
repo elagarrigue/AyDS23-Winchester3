@@ -1,7 +1,4 @@
-package ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.sqldb
-
-import ayds.winchester.songinfo.home.model.repository.local.spotify.sqldb.RELEASE_DATE_PRECISION_COLUMN
-import ayds.winchester.songinfo.home.model.repository.local.spotify.sqldb.SONGS_TABLE
+package ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqldb
 
 const val ARTISTS_TABLE = "artists"
 const val ID_COLUMN = "id"
@@ -15,6 +12,8 @@ const val SOURCE_COLUMN = "source"
     INFO_COLUMN,
     ARTIST_URL_COLUMN,
 )
+
+//TODO Cambiar creacion de la tabla para incluir lo que falta
 const val createArtistInfoTableQuery: String =
     "create table $ARTISTS_TABLE (" +
             "$ID_COLUMN INTEGER PRIMARY KEY AUTOINCREMENT," +
