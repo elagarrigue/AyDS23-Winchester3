@@ -1,7 +1,7 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
 
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoredetailsUIState
 import io.mockk.every
 import io.mockk.mockk
@@ -21,10 +21,10 @@ internal class PresenterImplTest {
     @Test
     fun `on showArtistInfo it should notify new uiState`() {
         val artistName = "Artist Name"
-        val artist=Artist(wikipediaURL = "wikiUrl", description = "")
+        val card=Card(infoURL = "wikiUrl", description = "")
         val formattedDescription = "Description"
-        every { artistRepository.getArtistInfo(artistName) } returns artist
-        every { formatter.formatDescription(artist) } returns formattedDescription
+        every { artistRepository.getArtistInfo(artistName) } returns card
+        every { formatter.formatDescription(card) } returns formattedDescription
         val artistTester: (MoredetailsUIState) -> Unit = mockk(relaxed = true)
         presenter.uiStateObservable.subscribe{
             artistTester(it)

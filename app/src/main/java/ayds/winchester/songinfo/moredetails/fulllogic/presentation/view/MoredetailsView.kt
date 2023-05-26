@@ -19,6 +19,7 @@ interface MoredetailsView {
 }
 
 class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
+    //TODO Agregar carrusel
     private lateinit var presenter: Presenter
     private lateinit var artistDescriptionTextView: TextView
     private lateinit var openUrlButton: Button

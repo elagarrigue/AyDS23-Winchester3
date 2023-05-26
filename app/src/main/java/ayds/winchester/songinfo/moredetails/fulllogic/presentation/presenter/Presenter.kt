@@ -3,7 +3,7 @@ import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoredetailsUIState
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 
 
 interface Presenter {
@@ -29,9 +29,9 @@ class PresenterImpl(private val artistRepository: Repository, private val format
         onUIStateSubject.notify(uiState)
     }
 
-    private fun updateUIState(artist: Artist?) {
-        val description = formatter.formatDescription(artist)
-        uiState = uiState.copy(description = description, urlOpenButton = artist?.wikipediaURL)
+    private fun updateUIState(card: Collection<Card>) {
+        val description = formatter.formatDescription(card)
+        uiState = uiState.copy(description = description, urlOpenButton = card?.infoURL)
     }
 
 }

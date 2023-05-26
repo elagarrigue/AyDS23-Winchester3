@@ -1,11 +1,11 @@
-package ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.sqldb
+package ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqldb
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import ayds.winchester.songinfo.moredetails.fulllogic.data.localWikipedia.ArtistLocalStorage
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Artist
+import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.ArtistLocalStorage
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 
 private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 2
@@ -18,11 +18,13 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
     }
 
-    override fun saveArtist(artist: Artist) {
+    //TODO revisar saveArtist, recibir el nombre como parametro?
+    //TODO recibe como parametro Card (y se lo llama muchas veces) o Collection<Card>
+    override fun saveArtist(card: Card) {
         ContentValues().apply {
-            put(ARTIST_COLUMN, artist.name)
-            put(INFO_COLUMN, artist.description)
-            put(ARTIST_URL_COLUMN, artist.wikipediaURL)
+            put(ARTIST_COLUMN, card.name)
+            put(INFO_COLUMN, card.description)
+            put(ARTIST_URL_COLUMN, card.infoURL)
             put(SOURCE_COLUMN, 1)
             writableDatabase?.insert(ARTISTS_TABLE, null, this)
         }
@@ -38,7 +40,7 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
             null,
             "artist DESC")
 
-    override fun getArtist(artistName: String): Artist? {
+    override fun getArtistCards(artistName: String): Collection<Card> {
         val cursor = getArtistCursor(artistName)
         return cursorToArtistMapper.mapArtistInfo(cursor)
     }
