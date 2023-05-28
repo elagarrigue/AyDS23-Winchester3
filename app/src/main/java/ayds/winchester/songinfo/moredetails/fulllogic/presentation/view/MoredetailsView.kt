@@ -16,14 +16,14 @@ import com.squareup.picasso.Picasso
 
 interface MoredetailsView {
     fun setPresenter(presenter: Presenter)
+
+
 }
 
 class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
     //TODO Agregar carrusel
     private lateinit var presenter: Presenter
-    private lateinit var artistDescriptionTextView: TextView
-    private lateinit var openUrlButton: Button
-    private lateinit var logoImageView: ImageView
+    private lateinit var
     private val observer: Observer<MoredetailsUIState> =
         Observer { value ->
             updateUIComponents(value)
