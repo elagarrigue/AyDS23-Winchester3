@@ -15,15 +15,20 @@ internal class RepositoryImpl(
     override fun getArtistInfo(artistName: String): Collection<Card> {
         var artist = artistLocalStorage.getArtistCards(artistName)
         when {
-            artist != null ->  artist.markArtistAsLocal()
+            artist != null -> artist.map { artist ->
+                artist.markArtistAsLocal();
+            }
             else -> {
-                try{
-                    val wikipediaArtist:WikipediaArtist? = wikipediaService.getArtist(artistName)
-                    artist = wikipediaArtist?.mapWikipediaArtist()
-                    artist?.let{
-                        artistLocalStorage.saveArtist(artist)
+                try {
+                    val artistExternalInfo: Collection<Card> =
+                        broker.getArtistFromExternalServices(artistName);
+                    artist = artistExternalInfo.mapCardArtist()
+                    artist.let {
+                        artist.map { artist ->
+                            artistLocalStorage.saveArtist(artist, artistName)
+                        }
                     }
-                }catch (e1: IOException) {
+                } catch (e1: IOException) {
                 }
             }
         }
@@ -35,12 +40,17 @@ internal class RepositoryImpl(
         this.isLocallyStored = true
     }
 
-    private fun WikipediaArtist.mapWikipediaArtist():Card{
-        return Card(
-                this.name,
-                this.wikipediaURL,
+    private fun Collection<Card>.mapCardArtist(): Collection<Card> {
+        return this.map { artist ->
+            Card(
+                artist.source,
+                artist.infoURL,
+                artist.sourceLogoURL,
+                artist.description,
                 false,
-                this.description
             )
+        }
+
+
     }
 }
