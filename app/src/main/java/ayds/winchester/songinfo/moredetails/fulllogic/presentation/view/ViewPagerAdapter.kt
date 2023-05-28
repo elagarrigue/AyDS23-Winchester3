@@ -20,19 +20,18 @@ class ArtistViewPagerAdapter(private val artistCards: Collection<Card>, private 
 
     override fun getItemCount() = artistCards.size
 
+    //TODO preguntar refactor
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistCardViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val view = layoutInflater.inflate(R.layout.viewpager_card, parent, false)
-        return ArtistCardViewHolder(view, activity)
+        return ArtistCardViewHolder.from(parent, activity)
     }
 
     override fun onBindViewHolder(cardHolder: ArtistCardViewHolder, position: Int) {
         cardHolder.bindArtistInfoToComponents(artistCards.elementAt(position))
     }
+
 }
 
-
-class ArtistCardViewHolder(private val cardView: View, private val activity: AppCompatActivity):RecyclerView.ViewHolder(cardView){
+class ArtistCardViewHolder private constructor(private val cardView: View, private val activity: AppCompatActivity):RecyclerView.ViewHolder(cardView){
     private lateinit var artistDescriptionTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var logoImageView: ImageView
@@ -84,6 +83,15 @@ class ArtistCardViewHolder(private val cardView: View, private val activity: App
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(url)
         activity.startActivity(intent)
+    }
+
+    //TODO tal vez podria ser una clase aparte que se inyecta al adapter?
+    companion object {
+        fun from(parent: ViewGroup, activity: AppCompatActivity): ArtistCardViewHolder {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val view = layoutInflater.inflate(R.layout.viewpager_card, parent, false)
+            return ArtistCardViewHolder(view, activity)
+        }
     }
 
 }
