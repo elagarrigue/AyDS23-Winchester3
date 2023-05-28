@@ -2,55 +2,89 @@ package ayds.winchester.songinfo.moredetails.fulllogic.presentation.view
 
 import android.content.Intent
 import android.net.Uri
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import ayds.winchester.songinfo.R
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 import com.squareup.picasso.Picasso
 
-class ViewPagerAdapterImpl(private val artistCards:List<Card>) : RecyclerView.Adapter<ViewPagerAdapterImpl.ArtistCardViewHolder>(){
-
-    inner class ArtistCardViewHolder(cardView: View):RecyclerView.ViewHolder(cardView){
-        var artistDescriptionTextView: TextView = cardView.findViewById(R.id.textPane2)
-        var openUrlButton: Button = cardView.findViewById(R.id.openUrlButton)
-        var logoImageView: ImageView = cardView.findViewById(R.id.imageView)
-        var sourceTextView: TextView = cardView.findViewById(R.id.sourceLabel)
-
-        init {
-
-        }
-
-    }
+class ArtistViewPagerAdapter(private val artistCards:List<Card>, private val activity: AppCompatActivity) : RecyclerView.Adapter<ArtistCardViewHolder>(){
 
     override fun getItemCount() = artistCards.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistCardViewHolder {
-        return ArtistCardViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.viewpager_card, parent, false))
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val view = layoutInflater.inflate(R.layout.viewpager_card, parent, false)
+        return ArtistCardViewHolder(view, activity)
     }
 
     override fun onBindViewHolder(holder: ArtistCardViewHolder, position: Int) {
-        val artistCard = artistCards[position]
-        holder.artistDescriptionTextView.text = artistCard.description
-        holder.sourceTextView.text = artistCard.source
-        holder.openUrlButton.setOnClickListener {
-            openExternalUrl(artistCard.infoURL)
-        }
-        Picasso.get().load(artistCard.sourceLogoURL).into(holder.logoImageView)
+        holder.updateUIComponents(artistCards[position])
     }
-
-    private fun openExternalUrl(url: String?) { //TODO navegar a external url
-        val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(url)
-        startActivity(intent)
-    }
-
-
-
 }
 
+
+class ArtistCardViewHolder(private val cardView: View, private val activity: AppCompatActivity):RecyclerView.ViewHolder(cardView){
+    private lateinit var artistDescriptionTextView: TextView
+    private lateinit var openUrlButton: Button
+    private lateinit var logoImageView: ImageView
+    private lateinit var sourceTextView: TextView
+
+    init {
+        initProperties()
+    }
+
+    private fun initProperties(){
+        artistDescriptionTextView = cardView.findViewById(R.id.textPane2)
+        openUrlButton = cardView.findViewById(R.id.openUrlButton)
+        logoImageView = cardView.findViewById(R.id.imageView)
+        sourceTextView = cardView.findViewById(R.id.sourceLabel)
+    }
+
+    fun updateUIComponents(artistCard: Card) {
+        loadWikipediaLogo(artistCard.sourceLogoURL)
+        setSourceLabel(artistCard.source)
+        updateArtistDescription(artistCard.description)
+        setButtonUrl(artistCard.infoURL)
+    }
+
+    private fun setSourceLabel(source: String) {
+        activity.runOnUiThread {
+            sourceTextView.text = source
+        }
+    }
+
+    private fun loadWikipediaLogo(urlImage: String) {
+        activity.runOnUiThread {
+            Picasso.get().load(urlImage).into(logoImageView)
+        }
+    }
+
+    private fun updateArtistDescription(finalText: String?) {
+        activity.runOnUiThread {
+            artistDescriptionTextView.text = Html.fromHtml(finalText)
+        }
+    }
+
+    private fun setButtonUrl(url:String?) {
+        openUrlButton.setOnClickListener {
+            openExternalUrl(url)
+        }
+    }
+
+    private fun openExternalUrl(url: String?) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(url)
+        activity.startActivity(intent)
+    }
+
+    //TODO preguntar si es correcto pasar el activity?
+}
 
