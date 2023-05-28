@@ -15,7 +15,8 @@ import ayds.winchester.songinfo.R
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 import com.squareup.picasso.Picasso
 
-class ArtistViewPagerAdapter(private val artistCards:List<Card>, private val activity: AppCompatActivity) : RecyclerView.Adapter<ArtistCardViewHolder>(){
+//TODO preguntar si es correcto que ambos reviban el activity
+class ArtistViewPagerAdapter(private val artistCards: Collection<Card>, private val activity: AppCompatActivity) : RecyclerView.Adapter<ArtistCardViewHolder>(){
 
     override fun getItemCount() = artistCards.size
 
@@ -25,8 +26,8 @@ class ArtistViewPagerAdapter(private val artistCards:List<Card>, private val act
         return ArtistCardViewHolder(view, activity)
     }
 
-    override fun onBindViewHolder(holder: ArtistCardViewHolder, position: Int) {
-        holder.updateUIComponents(artistCards[position])
+    override fun onBindViewHolder(cardHolder: ArtistCardViewHolder, position: Int) {
+        cardHolder.bindArtistInfoToComponents(artistCards.elementAt(position))
     }
 }
 
@@ -48,7 +49,7 @@ class ArtistCardViewHolder(private val cardView: View, private val activity: App
         sourceTextView = cardView.findViewById(R.id.sourceLabel)
     }
 
-    fun updateUIComponents(artistCard: Card) {
+    fun bindArtistInfoToComponents(artistCard: Card) {
         loadWikipediaLogo(artistCard.sourceLogoURL)
         setSourceLabel(artistCard.source)
         updateArtistDescription(artistCard.description)
@@ -85,6 +86,5 @@ class ArtistCardViewHolder(private val cardView: View, private val activity: App
         activity.startActivity(intent)
     }
 
-    //TODO preguntar si es correcto pasar el activity?
 }
 

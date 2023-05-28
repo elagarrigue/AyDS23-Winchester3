@@ -6,9 +6,7 @@ import androidx.viewpager2.widget.ViewPager2
 import ayds.observer.Observer
 import ayds.winchester.songinfo.R
 import ayds.winchester.songinfo.moredetails.fulllogic.MoredetailsInjector
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.Presenter
-import me.relex.circleindicator.CircleIndicator
 import me.relex.circleindicator.CircleIndicator3
 
 interface MoredetailsView {
@@ -48,8 +46,9 @@ class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
     }
 
     private fun updateUIComponents(uiState: MoredetailsUIState){
+        //TODO consultar si esta bien crearlo aca, o inyectarlo y setearle los cards aca
         val cards = uiState.cards
-        viewPager.adapter = ArtistViewPagerAdapter(cards, this) //TODO cambiar collection a list
+        viewPager.adapter = ArtistViewPagerAdapter(cards, this)
         circleIndicator.setViewPager(viewPager)
     }
 

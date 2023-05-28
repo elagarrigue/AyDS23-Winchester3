@@ -29,9 +29,11 @@ class PresenterImpl(private val artistRepository: Repository, private val format
         onUIStateSubject.notify(uiState)
     }
 
-    private fun updateUIState(card: Collection<Card>) {
-        val description = formatter.formatDescription(card)
-        uiState = uiState.copy(description = description, urlOpenButton = card?.infoURL)
+    private fun updateUIState(cards: Collection<Card>) {
+        val formattedCards = cards.map { card ->
+            card.copy(description = formatter.formatDescription(card))
+        }
+        uiState = uiState.copy(cards = formattedCards)
     }
 
 }
