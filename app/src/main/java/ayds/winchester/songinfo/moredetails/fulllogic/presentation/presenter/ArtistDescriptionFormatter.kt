@@ -19,17 +19,17 @@ private const val SLASH_NEW_LINE = "\\n"
 
 interface ArtistDescriptionFormatter {
 
-    fun formatDescription(card: Card?):String
+    fun formatDescription(card: Card?, artistName: String):String
 }
 
 class ArtistDescriptionFormatterHtml:ArtistDescriptionFormatter {
 
     //TODO ver que pasa con el isLocallyStored
-    override fun formatDescription(card: Card?): String {
+    override fun formatDescription(card: Card?, artistName: String): String {
         return when(card){
             is Card ->
                 "${if(card.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX} " +
-                "${artistInfoToHtml(card.description, card.name)}"
+                "${artistInfoToHtml(card.description, artistName)}"
             else -> NO_RESULTS_MESSAGE
         }
     }

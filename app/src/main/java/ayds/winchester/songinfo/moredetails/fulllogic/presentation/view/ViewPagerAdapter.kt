@@ -12,15 +12,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import ayds.winchester.songinfo.R
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 import com.squareup.picasso.Picasso
 
-//TODO preguntar si es correcto que ambos reviban el activity
-class ArtistViewPagerAdapter(private val artistCards: Collection<Card>, private val activity: AppCompatActivity) : RecyclerView.Adapter<ArtistCardViewHolder>(){
+class ArtistViewPagerAdapter(private val artistCards: Collection<UICard>, private val activity: AppCompatActivity) : RecyclerView.Adapter<ArtistCardViewHolder>(){
 
     override fun getItemCount() = artistCards.size
 
-    //TODO preguntar refactor
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistCardViewHolder {
         return ArtistCardViewHolder.from(parent, activity)
     }
@@ -48,7 +45,7 @@ class ArtistCardViewHolder private constructor(private val cardView: View, priva
         sourceTextView = cardView.findViewById(R.id.sourceLabel)
     }
 
-    fun bindArtistInfoToComponents(artistCard: Card) {
+    fun bindArtistInfoToComponents(artistCard: UICard) {
         loadWikipediaLogo(artistCard.sourceLogoURL)
         setSourceLabel(artistCard.source)
         updateArtistDescription(artistCard.description)
@@ -85,7 +82,6 @@ class ArtistCardViewHolder private constructor(private val cardView: View, priva
         activity.startActivity(intent)
     }
 
-    //TODO tal vez podria ser una clase aparte que se inyecta al adapter?
     companion object {
         fun from(parent: ViewGroup, activity: AppCompatActivity): ArtistCardViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)

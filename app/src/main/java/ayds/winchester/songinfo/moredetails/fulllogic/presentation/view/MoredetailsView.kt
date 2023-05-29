@@ -16,7 +16,6 @@ interface MoredetailsView {
 }
 
 class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
-    //TODO Agregar carrusel
     private lateinit var presenter: Presenter
     private lateinit var viewPager: ViewPager2
     private lateinit var circleIndicator: CircleIndicator3
@@ -46,7 +45,6 @@ class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
     }
 
     private fun updateUIComponents(uiState: MoredetailsUIState){
-        //TODO consultar si esta bien crearlo aca, o inyectarlo y setearle los cards aca
         val cards = uiState.cards
         viewPager.adapter = ArtistViewPagerAdapter(cards, this)
         circleIndicator.setViewPager(viewPager)

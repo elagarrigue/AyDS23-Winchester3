@@ -4,6 +4,8 @@ import ayds.observer.Subject
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoredetailsUIState
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
+import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.UICard
 
 
 interface Presenter {
@@ -24,16 +26,36 @@ class PresenterImpl(private val artistRepository: Repository, private val format
     }
 
     private fun displayArtistInfo(artistName: String) {
-        val artist = artistRepository.getArtistInfo(artistName)
-        updateUIState(artist)
+        val artistInfoCards = artistRepository.getArtistInfo(artistName)
+        val formattedCards = formatArtistCards(artistInfoCards, artistName)
+        updateUIState(formattedCards)
         onUIStateSubject.notify(uiState)
     }
 
-    private fun updateUIState(cards: Collection<Card>) {
+    private fun updateUIState(cards: Collection<UICard>) {
+        uiState = uiState.copy(cards = cards)
+    }
+
+    private fun formatArtistCards(cards: Collection<Card>, artistName: String): List<UICard> {
         val formattedCards = cards.map { card ->
-            card.copy(description = formatter.formatDescription(card))
+            val sourceTitle = getSourceTitle(card)
+            val formattedDescription = formatter.formatDescription(card, artistName)
+            UICard(
+                source = sourceTitle,
+                infoURL = card.infoURL,
+                sourceLogoURL = card.sourceLogoURL,
+                description = formattedDescription
+            )
         }
-        uiState = uiState.copy(cards = formattedCards)
+        return formattedCards
+    }
+
+    private fun getSourceTitle(card: Card): String {
+        return when (card.source) {
+            Source.WIKIPEDIA -> "Wikipedia"
+            Source.LAST_FM -> "Last FM"
+            Source.NEW_YORK_TIMES -> "New York Times"
+        }
     }
 
 }
