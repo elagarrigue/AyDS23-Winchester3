@@ -12,11 +12,11 @@ interface CursorToArtistMapper{
 internal class CursorToArtistMapperImpl : CursorToArtistMapper {
 
    override fun mapArtistInfo(cursor: Cursor): Collection<Card> {
-       var cards = mutableListOf<Card>()
+       val cards = mutableListOf<Card>()
        with(cursor) {
            if (moveToNext()) {
                val values = Source.values()
-               val sourceInt = cursor.getColumnIndexOrThrow(ARTIST_COLUMN)
+               val sourceInt = cursor.getColumnIndexOrThrow(SOURCE_COLUMN)
                cards.add(Card(
                    source = values[sourceInt],
                    description = getString(cursor.getColumnIndexOrThrow(INFO_COLUMN)),
