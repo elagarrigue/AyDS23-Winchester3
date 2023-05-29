@@ -10,14 +10,14 @@ interface Broker{
 
 internal class BrokerImpl:Broker{
 
-    private lateinit var proxyServices : MutableCollection<ProxyService>
+    private var proxyServices : MutableCollection<ProxyService> = mutableListOf()
 
     override fun addProxy(proxyService: ProxyService){
         proxyServices.add(proxyService)
     }
 
     override fun getArtistFromExternalServices(artistName: String): Collection<Card>{
-        lateinit var collectionCards : MutableCollection<Card>
+        var collectionCards = mutableListOf<Card>()
         proxyServices.forEach {
             it.getArtistInfo(artistName)?.let {
                     card -> collectionCards.add(card)
