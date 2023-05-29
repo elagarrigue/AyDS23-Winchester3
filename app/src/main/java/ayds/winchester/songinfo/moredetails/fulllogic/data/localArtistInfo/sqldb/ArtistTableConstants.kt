@@ -24,7 +24,7 @@ const val createArtistInfoTableQuery: String =
             "$ARTIST_COLUMN string," +
             "$INFO_COLUMN string," + //description
             "$ARTIST_URL_COLUMN string," + //infoURL
-            "$SOURCE_COLUMN string," + //source
+            "$SOURCE_COLUMN integer," + //source
             "$SOURCE_LOGO_URL_COLUMN string)" //sourceLogoURL
 
 const val upgradeArtistTableQuery: String =
