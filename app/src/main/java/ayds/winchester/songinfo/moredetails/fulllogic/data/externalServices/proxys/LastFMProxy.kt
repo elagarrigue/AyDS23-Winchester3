@@ -4,6 +4,7 @@ import ayds.lisboa3.submodule.lastFm.LAST_FM_DEFAULT_IMAGE
 import ayds.lisboa3.submodule.lastFm.LastFmArtistInfo
 import ayds.lisboa3.submodule.lastFm.LastFmService
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
 
 class LastFMProxy(
     private val lastFmService: LastFmService
@@ -15,7 +16,7 @@ class LastFMProxy(
     private fun LastFmArtistInfo?.mapLastFmArtis():Card?=
         this?.let{
             Card(
-                "LastFm",
+                Source.LAST_FM,
                 this.url,
                 LAST_FM_DEFAULT_IMAGE,
                 this.bioContent

@@ -1,6 +1,7 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys
 
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaArtist
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
 
@@ -16,7 +17,7 @@ class WikipediaProxy(
     private fun WikipediaArtist?.mapWikipediaArtist():Card?=
         this?.let{
             Card(
-                "Wikipedia",
+                Source.WIKIPEDIA,
                 this.wikipediaURL,
                 WIKIPEDIA_LOGO_URL,
                 this.description
