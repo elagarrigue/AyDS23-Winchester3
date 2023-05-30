@@ -8,7 +8,7 @@ import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.Artis
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 
 private const val DATABASE_NAME="dictionary.db"
-private const val DATABASE_VERSION= 2
+private const val DATABASE_VERSION= 1
 
 class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMapper: CursorToArtistMapper ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), ArtistLocalStorage{
     override fun onCreate(db: SQLiteDatabase) {
