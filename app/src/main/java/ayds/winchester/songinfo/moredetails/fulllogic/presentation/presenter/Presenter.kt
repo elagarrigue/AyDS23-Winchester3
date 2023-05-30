@@ -7,6 +7,7 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.UICard
 
+private const val EMPTY_CARD_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/f/f3/Exclamation_mark.png"
 
 interface Presenter {
     val uiStateObservable: Observable<MoredetailsUIState>
@@ -36,16 +37,23 @@ class PresenterImpl(private val artistRepository: Repository, private val format
         uiState = uiState.copy(cards = cards)
     }
 
+    //TODO modificar que y como se muestra cuando la coleccion esta vacia
     private fun formatArtistCards(cards: Collection<Card>, artistName: String): List<UICard> {
-        val formattedCards = cards.map { card ->
-            val sourceTitle = getSourceTitle(card)
-            val formattedDescription = formatter.formatDescription(card, artistName)
-            UICard(
-                source = sourceTitle,
-                infoURL = card.infoURL,
-                sourceLogoURL = card.sourceLogoURL,
-                description = formattedDescription
-            )
+        val formattedCards: Collection<UICard>
+        if(cards.isEmpty()){
+            val emptyCard = UICard("", "https://es.wikipedia.org/wiki/Wikipedia", EMPTY_CARD_IMAGE_URL, "No Result")
+            formattedCards = listOf(emptyCard, emptyCard, emptyCard)
+        }else {
+            formattedCards = cards.map { card ->
+                val sourceTitle = getSourceTitle(card)
+                val formattedDescription = formatter.formatDescription(card, artistName)
+                UICard(
+                    source = sourceTitle,
+                    infoURL = card.infoURL,
+                    sourceLogoURL = card.sourceLogoURL,
+                    description = formattedDescription
+                )
+            }
         }
         return formattedCards
     }
