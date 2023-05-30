@@ -3,6 +3,7 @@ package ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqld
 import android.database.Cursor
 
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
 
 interface CursorToArtistMapper{
     fun mapArtistInfo(cursor: Cursor) : Collection<Card>
@@ -11,12 +12,13 @@ interface CursorToArtistMapper{
 internal class CursorToArtistMapperImpl : CursorToArtistMapper {
 
    override fun mapArtistInfo(cursor: Cursor): Collection<Card> {
-       //TODO ciclar sobre el cursor para armar la coleccion de cards.
-       var cards = mutableListOf<Card>()
+       val cards = mutableListOf<Card>()
        with(cursor) {
            if (moveToNext()) {
+               val values = Source.values()
+               val sourceInt = cursor.getColumnIndexOrThrow(SOURCE_COLUMN)
                cards.add(Card(
-                   source = getString(cursor.getColumnIndexOrThrow(ARTIST_COLUMN)),
+                   source = values[sourceInt],
                    description = getString(cursor.getColumnIndexOrThrow(INFO_COLUMN)),
                    infoURL = getString(cursor.getColumnIndexOrThrow(ARTIST_URL_COLUMN)),
                    sourceLogoURL = getString(cursor.getColumnIndexOrThrow(SOURCE_LOGO_URL_COLUMN))

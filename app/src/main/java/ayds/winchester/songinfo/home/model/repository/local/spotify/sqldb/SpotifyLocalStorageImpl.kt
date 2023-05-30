@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import ayds.winchester.songinfo.home.model.entities.Song.SpotifySong
 import ayds.winchester.songinfo.home.model.repository.local.spotify.SpotifyLocalStorage
 
-private const val DATABASE_VERSION = 2
+private const val DATABASE_VERSION = 1
 private const val DATABASE_NAME = "songs.db"
 
 internal class SpotifyLocalStorageImpl(

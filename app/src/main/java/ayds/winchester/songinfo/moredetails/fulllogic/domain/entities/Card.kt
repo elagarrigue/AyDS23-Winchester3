@@ -1,12 +1,17 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.domain.entities
 
+enum class Source {
+    WIKIPEDIA,
+    LAST_FM,
+    NEW_YORK_TIMES
+}
+
 data class Card(
-    var source: String,
+    var source: Source,
     var infoURL: String,
     var sourceLogoURL: String,
     var description: String,
-    var isLocallyStored: Boolean,
+    var isLocallyStored: Boolean = false,
 )
 
-//TODO que sucede con el isLocallyStored?
 

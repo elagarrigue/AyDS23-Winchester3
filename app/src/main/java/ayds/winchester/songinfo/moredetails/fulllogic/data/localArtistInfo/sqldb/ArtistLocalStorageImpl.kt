@@ -8,7 +8,7 @@ import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.Artis
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 
 private const val DATABASE_NAME="dictionary.db"
-private const val DATABASE_VERSION= 2
+private const val DATABASE_VERSION= 1
 
 class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMapper: CursorToArtistMapper ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), ArtistLocalStorage{
     override fun onCreate(db: SQLiteDatabase) {
@@ -18,15 +18,13 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
     }
 
-    //TODO revisar saveArtist, recibir el nombre como parametro?
-    //TODO recibe como parametro Card (y se lo llama muchas veces) o Collection<Card>
     override fun saveArtist(card: Card, artistName: String) {
         ContentValues().apply {
             put(ARTIST_COLUMN, artistName)
             put(SOURCE_LOGO_URL_COLUMN, card.sourceLogoURL)
             put(INFO_COLUMN, card.description)
             put(ARTIST_URL_COLUMN, card.infoURL)
-            put(SOURCE_COLUMN, 1)
+            put(SOURCE_COLUMN, card.source.ordinal)
             writableDatabase?.insert(ARTISTS_TABLE, null, this)
         }
     }
