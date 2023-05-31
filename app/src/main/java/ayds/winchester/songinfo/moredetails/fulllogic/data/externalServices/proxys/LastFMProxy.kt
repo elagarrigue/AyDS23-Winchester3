@@ -22,5 +22,4 @@ class LastFMProxy(
                 this.bioContent
             )
         }
-
 }

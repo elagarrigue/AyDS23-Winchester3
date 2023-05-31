@@ -41,7 +41,7 @@ class PresenterImpl(private val artistRepository: Repository, private val format
     private fun formatArtistCards(cards: Collection<Card>, artistName: String): List<UICard> {
         val formattedCards: Collection<UICard>
         if(cards.isEmpty()){
-            val emptyCard = UICard("", "https://es.wikipedia.org/wiki/Wikipedia", EMPTY_CARD_IMAGE_URL, "No Result")
+            val emptyCard = UICard("Titulo", "https://es.wikipedia.org/wiki/Wikipedia", EMPTY_CARD_IMAGE_URL, "No Result")
             formattedCards = listOf(emptyCard, emptyCard, emptyCard)
         }else {
             formattedCards = cards.map { card ->

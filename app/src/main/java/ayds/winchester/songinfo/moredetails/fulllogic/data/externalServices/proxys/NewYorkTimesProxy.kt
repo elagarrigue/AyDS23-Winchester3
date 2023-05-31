@@ -1,11 +1,10 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys
 
 import ayds.ny3.newyorktimes.external.NYTArtistInfo
+import ayds.ny3.newyorktimes.external.NYT_LOGO_URL
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
-
-private const val NYTIMES_LOGO_URL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVioI832nuYIXqzySD8cOXRZEcdlAj3KfxA62UEC4FhrHVe0f7oZXp3_mSFG7nIcUKhg&usqp=CAU"
 
 class NewYorkTimesProxy(
     private val newYorkTimesService: NYTimesArtistInfoService
@@ -19,7 +18,7 @@ class NewYorkTimesProxy(
             Card(
                 Source.NEW_YORK_TIMES,
                 this.url,
-                NYTIMES_LOGO_URL,
+                NYT_LOGO_URL,
                 this.abstract
             )
         }
