@@ -24,7 +24,6 @@ interface ArtistDescriptionFormatter {
 
 class ArtistDescriptionFormatterHtml:ArtistDescriptionFormatter {
 
-    //TODO ver que pasa con el isLocallyStored
     override fun formatDescription(card: Card?, artistName: String): String {
         return when(card){
             is Card ->

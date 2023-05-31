@@ -9,6 +9,6 @@ data class UICard(
     var description: String
 )
 
-data class MoredetailsUIState(
+data class MoreDetailsUIState(
     val cards: Collection<UICard> = emptyList()
 )
