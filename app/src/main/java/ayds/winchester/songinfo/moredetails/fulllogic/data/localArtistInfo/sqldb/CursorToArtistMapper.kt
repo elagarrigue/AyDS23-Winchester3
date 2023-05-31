@@ -14,17 +14,15 @@ internal class CursorToArtistMapperImpl : CursorToArtistMapper {
    override fun mapArtistInfo(cursor: Cursor): Collection<Card> {
        val cards = mutableListOf<Card>()
        with(cursor) {
-           if (moveToNext()) {
+           while (moveToNext()) {
                val values = Source.values()
-               val sourceInt = cursor.getColumnIndexOrThrow(SOURCE_COLUMN)
+               val sourceInt = getInt(cursor.getColumnIndexOrThrow(SOURCE_COLUMN))
                cards.add(Card(
                    source = values[sourceInt],
                    description = getString(cursor.getColumnIndexOrThrow(INFO_COLUMN)),
                    infoURL = getString(cursor.getColumnIndexOrThrow(ARTIST_URL_COLUMN)),
                    sourceLogoURL = getString(cursor.getColumnIndexOrThrow(SOURCE_LOGO_URL_COLUMN))
                ))
-           } else {
-               null
            }
        }
        return cards
