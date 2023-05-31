@@ -2,10 +2,9 @@ package ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.pro
 
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
+import ayds.winchester3.wikiartist.artist.externalWikipedia.WIKIPEDIA_LOGO_URL
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaArtist
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService
-
-private const val WIKIPEDIA_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/8/8c/Wikipedia-logo-v2-es.png"
 
 class WikipediaProxy(
     private val wikipediaService : WikipediaService,
