@@ -21,9 +21,9 @@ object MoreDetailsInjector {
 
     private val cursorArtistMapper:CursorToArtistMapper = CursorToArtistMapperImpl()
     private val artistDescriptionFormatter = ArtistDescriptionFormatterHtml()
-    private val brokerService = BrokerImpl()
 
     fun init(moreDetailsView: MoreDetailsView){
+        val brokerService = BrokerImpl()
         brokerService.addProxy(WikipediaProxy(wikipediaService))
         brokerService.addProxy(LastFMProxy(LastFmInjector.getService()))
         brokerService.addProxy(NewYorkTimesProxy(newYorkTimesArtistInfoServiceImpl))
