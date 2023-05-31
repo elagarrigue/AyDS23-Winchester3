@@ -21,11 +21,9 @@ internal class RepositoryImpl(
             else -> {
                 try {
                     artistCardInfo = broker.getArtistFromExternalServices(artistName);
-                    artistCardInfo.let {
-                        artistCardInfo.map { artist ->
-                            artistLocalStorage.saveArtist(artist, artistName)
+                    artistCardInfo.forEach{ artistCard ->
+                            artistLocalStorage.saveArtist(artistCard, artistName)
                         }
-                    }
                 } catch (e1: IOException) {}
             }
         }
