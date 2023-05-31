@@ -15,6 +15,8 @@ interface Presenter {
     fun showArtistInfo(artistName:String)
 }
 
+private const val NO_RESULT_MESSAGE = "No Result"
+
 class PresenterImpl(private val artistRepository: Repository, private val formatter: ArtistDescriptionFormatterHtml):Presenter {
     override var uiState = MoreDetailsUIState()
     private val onUIStateSubject = Subject<MoreDetailsUIState>()
@@ -40,8 +42,8 @@ class PresenterImpl(private val artistRepository: Repository, private val format
     private fun formatArtistCards(cards: Collection<Card>, artistName: String): List<UICard> {
         val formattedCards: Collection<UICard>
         if(cards.isEmpty()){
-            val emptyCard = UICard("Titulo", "https://es.wikipedia.org/wiki/Wikipedia", EMPTY_CARD_IMAGE_URL, "No Result")
-            formattedCards = listOf(emptyCard, emptyCard, emptyCard)
+            val emptyCard = UICard("", "", EMPTY_CARD_IMAGE_URL, NO_RESULT_MESSAGE)
+            formattedCards = listOf(emptyCard)
         }else {
             formattedCards = cards.map { card ->
                 val sourceTitle = getSourceTitle(card)
