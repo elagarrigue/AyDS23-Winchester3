@@ -5,21 +5,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import ayds.observer.Observer
 import ayds.winchester.songinfo.R
-import ayds.winchester.songinfo.moredetails.fulllogic.MoredetailsInjector
+import ayds.winchester.songinfo.moredetails.fulllogic.MoreDetailsInjector
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.Presenter
 import me.relex.circleindicator.CircleIndicator3
 
-interface MoredetailsView {
+interface MoreDetailsView {
     fun setPresenter(presenter: Presenter)
-
 
 }
 
-class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
+class MoreDetailsActivity:MoreDetailsView, AppCompatActivity() {
     private lateinit var presenter: Presenter
     private lateinit var viewPager: ViewPager2
     private lateinit var circleIndicator: CircleIndicator3
-    private val observer: Observer<MoredetailsUIState> =
+    private val observer: Observer<MoreDetailsUIState> =
         Observer { state ->
             updateUIComponents(state)
         }
@@ -45,7 +44,7 @@ class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
     }
 
     //TODO refactorizar y ver si se puede llevar al injector
-    private fun updateUIComponents(uiState: MoredetailsUIState){
+    private fun updateUIComponents(uiState: MoreDetailsUIState){
         val cards = uiState.cards
         runOnUiThread {
             viewPager.adapter = ArtistViewPagerAdapter(cards, this)
@@ -59,7 +58,7 @@ class MoredetailsActivity:MoredetailsView, AppCompatActivity() {
     }
 
     private fun initModule(){
-        MoredetailsInjector.init(this)
+        MoreDetailsInjector.init(this)
     }
 
 

@@ -13,19 +13,17 @@ import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqldb
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqldb.CursorToArtistMapperImpl
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.ArtistDescriptionFormatterHtml
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.PresenterImpl
-import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoredetailsView
+import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoreDetailsView
 import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaInjector.wikipediaService
 
 
-
-object MoredetailsInjector {
+object MoreDetailsInjector {
 
     private val cursorArtistMapper:CursorToArtistMapper = CursorToArtistMapperImpl()
     private val artistDescriptionFormatter = ArtistDescriptionFormatterHtml()
     private val brokerService = BrokerImpl()
 
-
-    fun init(moreDetailsView: MoredetailsView){
+    fun init(moreDetailsView: MoreDetailsView){
         brokerService.addProxy(WikipediaProxy(wikipediaService))
         brokerService.addProxy(LastFMProxy(LastFmInjector.getService()))
         brokerService.addProxy(NewYorkTimesProxy(newYorkTimesArtistInfoServiceImpl))
@@ -36,5 +34,4 @@ object MoredetailsInjector {
         moreDetailsView.setPresenter(presenter)
     }
 
-    //TODO cambiar para que el repository reciba un broker
 }

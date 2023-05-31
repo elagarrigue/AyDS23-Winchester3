@@ -1,7 +1,6 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data
 
 import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.Broker
-import ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaArtist
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.ArtistLocalStorage
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
@@ -16,11 +15,11 @@ internal class RepositoryImpl(
         var artistCardInfo = artistLocalStorage.getArtistCards(artistName)
         when {
             artistCardInfo.isNotEmpty() -> artistCardInfo.map { artistCardInfo ->
-                artistCardInfo.markArtistAsLocal();
+                artistCardInfo.markArtistAsLocal()
             }
             else -> {
                 try {
-                    artistCardInfo = broker.getArtistFromExternalServices(artistName);
+                    artistCardInfo = broker.getArtistFromExternalServices(artistName)
                     artistCardInfo.let {
                         artistCardInfo.map { artist ->
                             artistLocalStorage.saveArtist(artist, artistName)
@@ -29,7 +28,6 @@ internal class RepositoryImpl(
                 } catch (e1: IOException) {}
             }
         }
-        //TODO obtener lista de la base de datos o servicios externos
         return artistCardInfo
     }
 
