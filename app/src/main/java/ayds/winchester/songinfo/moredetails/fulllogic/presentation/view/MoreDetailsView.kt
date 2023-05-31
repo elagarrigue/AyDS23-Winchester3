@@ -43,11 +43,9 @@ class MoreDetailsActivity:MoreDetailsView, AppCompatActivity() {
         openArtistInfoWindow(artistName)
     }
 
-    //TODO refactorizar y ver si se puede llevar al injector
     private fun updateUIComponents(uiState: MoreDetailsUIState){
-        val cards = uiState.cards
         runOnUiThread {
-            viewPager.adapter = ArtistViewPagerAdapter(cards, this)
+            viewPager.adapter = ArtistViewPagerAdapter(uiState.cards, this)
             circleIndicator.setViewPager(viewPager)
         }
 
