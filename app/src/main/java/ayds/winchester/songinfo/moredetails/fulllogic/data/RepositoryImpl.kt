@@ -13,17 +13,16 @@ internal class RepositoryImpl(
 ): Repository {
 
     override fun getArtistInfo(artistName: String): Collection<Card> {
-        var artist = artistLocalStorage.getArtistCards(artistName)
+        var artistCardInfo = artistLocalStorage.getArtistCards(artistName)
         when {
-            artist.isNotEmpty() -> artist.map { artist ->
-                artist.markArtistAsLocal();
+            artistCardInfo.isNotEmpty() -> artistCardInfo.map { artistCardInfo ->
+                artistCardInfo.markArtistAsLocal();
             }
             else -> {
                 try {
-                    val artistExternalInfo: Collection<Card> =
-                        broker.getArtistFromExternalServices(artistName);
-                    artistExternalInfo.let {
-                        artistExternalInfo.map { artist ->
+                    artistCardInfo = broker.getArtistFromExternalServices(artistName);
+                    artistCardInfo.let {
+                        artistCardInfo.map { artist ->
                             artistLocalStorage.saveArtist(artist, artistName)
                         }
                     }
@@ -31,7 +30,7 @@ internal class RepositoryImpl(
             }
         }
         //TODO obtener lista de la base de datos o servicios externos
-        return artist
+        return artistCardInfo
     }
 
     private fun Card.markArtistAsLocal() {
