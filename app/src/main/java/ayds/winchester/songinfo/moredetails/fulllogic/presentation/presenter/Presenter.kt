@@ -3,7 +3,7 @@ import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoreDetailsUIState
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.UICard
 
@@ -39,13 +39,13 @@ class PresenterImpl(private val artistRepository: Repository, private val format
         uiState = uiState.copy(cards = cards)
     }
 
-    private fun formatArtistCards(cards: Collection<Card>, artistName: String): List<UICard> {
+    private fun formatArtistCards(cardArtists: Collection<CardArtist>, artistName: String): List<UICard> {
         val formattedCards: Collection<UICard>
-        if(cards.isEmpty()){
+        if(cardArtists.isEmpty()){
             val emptyCard = UICard("", "", EMPTY_CARD_IMAGE_URL, NO_RESULT_MESSAGE)
             formattedCards = listOf(emptyCard)
         }else {
-            formattedCards = cards.map { card ->
+            formattedCards = cardArtists.map { card ->
                 val sourceTitle = getSourceTitle(card)
                 val formattedDescription = formatter.formatDescription(card, artistName)
                 UICard(
@@ -59,8 +59,8 @@ class PresenterImpl(private val artistRepository: Repository, private val format
         return formattedCards
     }
 
-    private fun getSourceTitle(card: Card): String {
-        return when (card.source) {
+    private fun getSourceTitle(cardArtist: CardArtist): String {
+        return when (cardArtist.source) {
             Source.WIKIPEDIA -> "Wikipedia"
             Source.LAST_FM -> "Last FM"
             Source.NEW_YORK_TIMES -> "New York Times"

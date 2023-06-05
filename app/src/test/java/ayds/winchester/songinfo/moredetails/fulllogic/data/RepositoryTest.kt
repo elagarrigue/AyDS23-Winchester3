@@ -2,7 +2,7 @@ package ayds.winchester.songinfo.moredetails.fulllogic.data
 
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.ArtistLocalStorage
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -21,7 +21,7 @@ internal class RepositoryTest {
     @Test
     fun `given an existing artist in the local repository it should return it and mark it as local`() {
         val artistName = "name"
-        val card = Card(name = artistName, infoURL = "wikiUrl", description = "desc")
+        val card = CardArtist(name = artistName, infoURL = "wikiUrl", description = "desc")
         every { artistLocalStorage.getArtistCards(artistName) } returns card
 
         val result = artistRepository.getArtistInfo(artistName)
@@ -33,7 +33,7 @@ internal class RepositoryTest {
     @Test
     fun `given an artist that is not in the local repository but can be obtained from the external service, it should return the song, store it but not mark it as local`(){
         val artistName = "name"
-        val card = Card(name = artistName, infoURL = "wikiUrl", description = "desc")
+        val card = CardArtist(name = artistName, infoURL = "wikiUrl", description = "desc")
         every { artistLocalStorage.getArtistCards(artistName) } returns null
         every { wikipediaService.getArtist(artistName) } returns card
 

@@ -3,19 +3,19 @@ package ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.pro
 import ayds.ny3.newyorktimes.external.NYTArtistInfo
 import ayds.ny3.newyorktimes.external.NYT_LOGO_URL
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
 
 class NewYorkTimesProxy(
     private val newYorkTimesService: NYTimesArtistInfoService
 ): ProxyService {
 
-    override fun getArtistInfo(artistName: String):Card?=
+    override fun getArtistInfo(artistName: String):CardArtist?=
         newYorkTimesService.getArtistInfo(artistName)?.mapNYTimesArtist()
 
-    private fun NYTArtistInfo?.mapNYTimesArtist():Card?=
+    private fun NYTArtistInfo?.mapNYTimesArtist():CardArtist?=
         this?.let {
-            Card(
+            CardArtist(
                 Source.NEW_YORK_TIMES,
                 this.url,
                 NYT_LOGO_URL,

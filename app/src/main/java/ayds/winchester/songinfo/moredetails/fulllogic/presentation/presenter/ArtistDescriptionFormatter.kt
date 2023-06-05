@@ -1,6 +1,6 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
 
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import java.util.*
 
 private const val IS_LOCALLY_STORED_PREFIX = "[*]"
@@ -19,16 +19,16 @@ private const val SLASH_NEW_LINE = "\\n"
 
 interface ArtistDescriptionFormatter {
 
-    fun formatDescription(card: Card?, artistName: String):String
+    fun formatDescription(cardArtist: CardArtist?, artistName: String):String
 }
 
 class ArtistDescriptionFormatterHtml:ArtistDescriptionFormatter {
 
-    override fun formatDescription(card: Card?, artistName: String): String {
-        return when(card){
-            is Card ->
-                "${if(card.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX} " +
-                "${artistInfoToHtml(card.description, artistName)}"
+    override fun formatDescription(cardArtist: CardArtist?, artistName: String): String {
+        return when(cardArtist){
+            is CardArtist ->
+                "${if(cardArtist.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX} " +
+                "${artistInfoToHtml(cardArtist.description, artistName)}"
             else -> NO_RESULTS_MESSAGE
         }
     }

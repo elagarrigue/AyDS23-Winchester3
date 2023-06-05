@@ -6,7 +6,7 @@ enum class Source {
     NEW_YORK_TIMES
 }
 
-data class Card(
+data class CardArtist(
     var source: Source,
     var infoURL: String,
     var sourceLogoURL: String,

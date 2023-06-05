@@ -1,14 +1,14 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices
 
 import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys.ProxyService
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 
-interface Broker{
+interface CardBroker{
     fun addProxy(proxyService: ProxyService)
-    fun getArtistFromExternalServices(artistName: String):Collection<Card>
+    fun getArtistFromExternalServices(artistName: String):Collection<CardArtist>
 }
 
-internal class BrokerImpl:Broker{
+internal class CardBrokerImpl:CardBroker{
 
     private var proxyServices : MutableCollection<ProxyService> = mutableListOf()
 
@@ -16,13 +16,13 @@ internal class BrokerImpl:Broker{
         proxyServices.add(proxyService)
     }
 
-    override fun getArtistFromExternalServices(artistName: String): Collection<Card>{
-        var collectionCards = mutableListOf<Card>()
+    override fun getArtistFromExternalServices(artistName: String): Collection<CardArtist>{
+        var collectionCardArtists = mutableListOf<CardArtist>()
         proxyServices.forEach {
             it.getArtistInfo(artistName)?.let {
-                    card -> collectionCards.add(card)
+                    card -> collectionCardArtists.add(card)
             }
         }
-        return collectionCards
+        return collectionCardArtists
     }
 }

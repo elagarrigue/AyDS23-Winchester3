@@ -1,7 +1,7 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys
 
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 
 interface ProxyService {
-    fun getArtistInfo(artistName:String): Card?
+    fun getArtistInfo(artistName:String): CardArtist?
 }

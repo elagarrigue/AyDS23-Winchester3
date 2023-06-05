@@ -1,5 +1,5 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import org.junit.Assert
 import org.junit.Test
 
@@ -9,7 +9,7 @@ internal class  CardDescriptionFormatterHtmlTest {
 
     @Test
     fun `given a locally stored wikipedia artist it should return the format description`() {
-        val card : Card = Card(
+        val card : CardArtist = CardArtist(
             name =  "Duki",
             infoURL = "https://en.wikipedia.org/?curid=64829658",
             isLocallyStored = true,
@@ -24,7 +24,7 @@ internal class  CardDescriptionFormatterHtmlTest {
 
     @Test
     fun `given a non locally stored wikipedia artist it should return the format description`() {
-        val card : Card = Card(
+        val card : CardArtist = CardArtist(
             name =  "Duki",
             infoURL = "https://en.wikipedia.org/?curid=64829658",
             isLocallyStored = false,
@@ -38,7 +38,7 @@ internal class  CardDescriptionFormatterHtmlTest {
     }
     @Test
     fun `given a non wikipedia artist it should return not found description`() {
-        val card : Card? = null;
+        val card : CardArtist? = null;
         val result = artistdescriptionformat.formatDescription(card);
         val expected = "No Results"
 

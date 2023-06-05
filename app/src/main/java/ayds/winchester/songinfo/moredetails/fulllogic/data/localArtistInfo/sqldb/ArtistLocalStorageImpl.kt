@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.ArtistLocalStorage
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Card
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 
 private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 1
@@ -18,13 +18,13 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
     }
 
-    override fun saveArtist(card: Card, artistName: String) {
+    override fun saveArtist(cardArtist: CardArtist, artistName: String) {
         ContentValues().apply {
             put(ARTIST_COLUMN, artistName)
-            put(SOURCE_LOGO_URL_COLUMN, card.sourceLogoURL)
-            put(INFO_COLUMN, card.description)
-            put(ARTIST_URL_COLUMN, card.infoURL)
-            put(SOURCE_COLUMN, card.source.ordinal)
+            put(SOURCE_LOGO_URL_COLUMN, cardArtist.sourceLogoURL)
+            put(INFO_COLUMN, cardArtist.description)
+            put(ARTIST_URL_COLUMN, cardArtist.infoURL)
+            put(SOURCE_COLUMN, cardArtist.source.ordinal)
             writableDatabase?.insert(ARTISTS_TABLE, null, this)
         }
     }
@@ -39,7 +39,7 @@ class ArtistLocalStorageImpl(context: Context? , private val cursorToArtistMappe
             null,
             "artist DESC")
 
-    override fun getArtistCards(artistName: String): Collection<Card> {
+    override fun getArtistCards(artistName: String): Collection<CardArtist> {
         val cursor = getArtistCursor(artistName)
         return cursorToArtistMapper.mapArtistInfo(cursor)
     }

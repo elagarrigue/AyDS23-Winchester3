@@ -4,7 +4,7 @@ import android.content.Context
 import ayds.lisboa3.submodule.lastFm.LastFmInjector
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoServiceInjector.newYorkTimesArtistInfoServiceImpl
 import ayds.winchester.songinfo.moredetails.fulllogic.data.RepositoryImpl
-import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.BrokerImpl
+import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.CardBrokerImpl
 import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys.LastFMProxy
 import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys.NewYorkTimesProxy
 import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys.WikipediaProxy
@@ -23,7 +23,7 @@ object MoreDetailsInjector {
     private val artistDescriptionFormatter = ArtistDescriptionFormatterHtml()
 
     fun init(moreDetailsView: MoreDetailsView){
-        val brokerService = BrokerImpl()
+        val brokerService = CardBrokerImpl()
         brokerService.addProxy(WikipediaProxy(wikipediaService))
         brokerService.addProxy(LastFMProxy(LastFmInjector.getService()))
         brokerService.addProxy(NewYorkTimesProxy(newYorkTimesArtistInfoServiceImpl))
