@@ -5,7 +5,7 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 
 interface CardBroker{
     fun addProxy(proxyService: ProxyService)
-    fun getArtistFromExternalServices(artistName: String):Collection<CardArtist>
+    fun getArtistFromExternalServices(artistName: String): List<CardArtist>
 }
 
 internal class CardBrokerImpl:CardBroker{
@@ -16,8 +16,8 @@ internal class CardBrokerImpl:CardBroker{
         proxyServices.add(proxyService)
     }
 
-    override fun getArtistFromExternalServices(artistName: String): Collection<CardArtist>{
-        var collectionCardArtists = mutableListOf<CardArtist>()
+    override fun getArtistFromExternalServices(artistName: String): List<CardArtist> {
+        val collectionCardArtists = mutableListOf<CardArtist>()
         proxyServices.forEach {
             it.getArtistInfo(artistName)?.let {
                     card -> collectionCardArtists.add(card)

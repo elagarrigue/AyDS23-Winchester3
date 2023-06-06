@@ -17,24 +17,24 @@ private const val BOLD_TAG = "<b>"
 private const val CLOSE_BOLD_TAG = "</b>"
 private const val SLASH_NEW_LINE = "\\n"
 
-interface ArtistDescriptionFormatter {
+interface CardDescriptionFormatter {
 
     fun formatDescription(cardArtist: CardArtist?, artistName: String):String
 }
 
-class ArtistDescriptionFormatterHtml:ArtistDescriptionFormatter {
+class CardDescriptionFormatterHtml:CardDescriptionFormatter {
 
     override fun formatDescription(cardArtist: CardArtist?, artistName: String): String {
         return when(cardArtist){
             is CardArtist ->
                 "${if(cardArtist.isLocallyStored) IS_LOCALLY_STORED_PREFIX else IS_NOT_LOCALLY_STORED_PREFIX} " +
-                "${artistInfoToHtml(cardArtist.description, artistName)}"
+                "${cardInfoToHtml(cardArtist.description, artistName)}"
             else -> NO_RESULTS_MESSAGE
         }
     }
 
-    private fun artistInfoToHtml(description: String, artistName: String): String {
-        val textWithBold = formatArtistText(description, artistName)
+    private fun cardInfoToHtml(description: String, artistName: String): String {
+        val textWithBold = formatCardText(description, artistName)
         val builder = StringBuilder()
         return builder
             .append(HTML_DIV_DESCRIPTION)
@@ -44,7 +44,7 @@ class ArtistDescriptionFormatterHtml:ArtistDescriptionFormatter {
             .toString()
     }
 
-    private fun formatArtistText(description: String, artistName: String): String {
+    private fun formatCardText(description: String, artistName: String): String {
         return description
             .replace(SLASH_NEW_LINE, NEW_LINE_PLAIN)
             .replace(SINGLE_QUOTE, BLANK_SPACE)

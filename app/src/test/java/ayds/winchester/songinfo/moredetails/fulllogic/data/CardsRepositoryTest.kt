@@ -1,7 +1,7 @@
 package ayds.winchester.songinfo.moredetails.fulllogic.data
 
-import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.ArtistLocalStorage
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
+import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.ArtistCardStorage
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.CardsRepository
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import io.mockk.every
 import io.mockk.mockk
@@ -11,20 +11,20 @@ import org.junit.Test
 import java.io.IOException
 
 
-internal class RepositoryTest {
-    private val artistLocalStorage: ArtistLocalStorage = mockk(relaxUnitFun = true)
+internal class CardsRepositoryTest {
+    private val artistCardStorage: ArtistCardStorage = mockk(relaxUnitFun = true)
     private val wikipediaService: ayds.winchester3.wikiartist.artist.externalWikipedia.WikipediaService = mockk(relaxUnitFun = true)
-    private val artistRepository: Repository by lazy {
-        RepositoryImpl(artistLocalStorage, wikipediaService)
+    private val artistCardsRepository: CardsRepository by lazy {
+        CardsRepositoryImpl(artistCardStorage, wikipediaService)
     }
 
     @Test
     fun `given an existing artist in the local repository it should return it and mark it as local`() {
         val artistName = "name"
         val card = CardArtist(name = artistName, infoURL = "wikiUrl", description = "desc")
-        every { artistLocalStorage.getArtistCards(artistName) } returns card
+        every { artistCardStorage.getArtistCards(artistName) } returns card
 
-        val result = artistRepository.getArtistInfo(artistName)
+        val result = artistCardsRepository.getArtistInfo(artistName)
 
         assertEquals(card, result)
         assertTrue(card.isLocallyStored)
@@ -34,37 +34,37 @@ internal class RepositoryTest {
     fun `given an artist that is not in the local repository but can be obtained from the external service, it should return the song, store it but not mark it as local`(){
         val artistName = "name"
         val card = CardArtist(name = artistName, infoURL = "wikiUrl", description = "desc")
-        every { artistLocalStorage.getArtistCards(artistName) } returns null
+        every { artistCardStorage.getArtistCards(artistName) } returns null
         every { wikipediaService.getArtist(artistName) } returns card
 
-        val result = artistRepository.getArtistInfo(artistName)
+        val result = artistCardsRepository.getArtistInfo(artistName)
 
         assertEquals(card, result)
-        verify { artistLocalStorage.saveArtist(card) }
+        verify { artistCardStorage.saveCards(card) }
         assertFalse(card.isLocallyStored)
     }
 
     @Test
     fun `given an artist that cannot be obtained in the local repository or external service it should return null and not store it`(){
         val artistName = "name"
-        every { artistLocalStorage.getArtistCards(artistName) } returns null
+        every { artistCardStorage.getArtistCards(artistName) } returns null
         every { wikipediaService.getArtist(artistName) } returns null
 
-        val result = artistRepository.getArtistInfo(artistName)
+        val result = artistCardsRepository.getArtistInfo(artistName)
 
         assertEquals(null, result)
-        verify(exactly = 0) { artistLocalStorage.saveArtist(any()) }
+        verify(exactly = 0) { artistCardStorage.saveCards(any()) }
     }
 
     @Test
     fun `given service exception should return null`(){
         val artistName = "name"
-        every { artistLocalStorage.getArtistCards(artistName) } returns null
+        every { artistCardStorage.getArtistCards(artistName) } returns null
         every { wikipediaService.getArtist(artistName) } throws mockk<IOException>()
 
-        val result = artistRepository.getArtistInfo(artistName)
+        val result = artistCardsRepository.getArtistInfo(artistName)
 
         assertEquals(null, result)
-        verify(exactly = 0) { artistLocalStorage.saveArtist(any()) }
+        verify(exactly = 0) { artistCardStorage.saveCards(any()) }
     }
 }

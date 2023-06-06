@@ -6,12 +6,12 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
 
 interface CursorToArtistMapper{
-    fun mapArtistInfo(cursor: Cursor) : Collection<CardArtist>
+    fun mapArtistInfo(cursor: Cursor): List<CardArtist>
 }
 
 internal class CursorToArtistMapperImpl : CursorToArtistMapper {
 
-   override fun mapArtistInfo(cursor: Cursor): Collection<CardArtist> {
+   override fun mapArtistInfo(cursor: Cursor): List<CardArtist> {
        val cardArtists = mutableListOf<CardArtist>()
        with(cursor) {
            while (moveToNext()) {

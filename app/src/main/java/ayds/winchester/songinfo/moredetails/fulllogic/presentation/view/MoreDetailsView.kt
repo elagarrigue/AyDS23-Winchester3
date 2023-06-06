@@ -6,16 +6,16 @@ import androidx.viewpager2.widget.ViewPager2
 import ayds.observer.Observer
 import ayds.winchester.songinfo.R
 import ayds.winchester.songinfo.moredetails.fulllogic.MoreDetailsInjector
-import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.Presenter
+import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.MoreDetailsPresenter
 import me.relex.circleindicator.CircleIndicator3
 
 interface MoreDetailsView {
-    fun setPresenter(presenter: Presenter)
+    fun setPresenter(moreDetailsPresenter: MoreDetailsPresenter)
 
 }
 
 class MoreDetailsActivity:MoreDetailsView, AppCompatActivity() {
-    private lateinit var presenter: Presenter
+    private lateinit var moreDetailsPresenter: MoreDetailsPresenter
     private lateinit var viewPager: ViewPager2
     private lateinit var circleIndicator: CircleIndicator3
     private val observer: Observer<MoreDetailsUIState> =
@@ -51,8 +51,8 @@ class MoreDetailsActivity:MoreDetailsView, AppCompatActivity() {
 
     }
 
-    override fun setPresenter(presenter: Presenter) {
-        this.presenter = presenter
+    override fun setPresenter(moreDetailsPresenter: MoreDetailsPresenter) {
+        this.moreDetailsPresenter = moreDetailsPresenter
     }
 
     private fun initModule(){
@@ -61,13 +61,13 @@ class MoreDetailsActivity:MoreDetailsView, AppCompatActivity() {
 
 
     private fun initObservers() {
-        presenter.uiStateObservable.subscribe(observer)
+        moreDetailsPresenter.uiStateObservable.subscribe(observer)
     }
 
     private fun getArtistNameFromIntent() = intent.getStringExtra(ARTIST_NAME_EXTRA).toString()
 
     private fun openArtistInfoWindow(artistName:String) {
-        presenter.showArtistInfo(artistName)
+        moreDetailsPresenter.showArtistInfo(artistName)
     }
 
     companion object {

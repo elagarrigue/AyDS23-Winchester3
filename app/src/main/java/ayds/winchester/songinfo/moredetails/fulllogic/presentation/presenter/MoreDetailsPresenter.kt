@@ -2,14 +2,14 @@ package ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter
 import ayds.observer.Observable
 import ayds.observer.Subject
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.MoreDetailsUIState
-import ayds.winchester.songinfo.moredetails.fulllogic.domain.Repository
+import ayds.winchester.songinfo.moredetails.fulllogic.domain.CardsRepository
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.view.UICard
 
 private const val EMPTY_CARD_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/f/f3/Exclamation_mark.png"
 
-interface Presenter {
+interface MoreDetailsPresenter {
     val uiStateObservable: Observable<MoreDetailsUIState>
     var uiState: MoreDetailsUIState
     fun showArtistInfo(artistName:String)
@@ -17,7 +17,7 @@ interface Presenter {
 
 private const val NO_RESULT_MESSAGE = "No Result"
 
-class PresenterImpl(private val artistRepository: Repository, private val formatter: ArtistDescriptionFormatterHtml):Presenter {
+internal class MoreDetailsPresenterImpl(private val artistCardsRepository: CardsRepository, private val formatter: CardDescriptionFormatterHtml):MoreDetailsPresenter {
     override var uiState = MoreDetailsUIState()
     private val onUIStateSubject = Subject<MoreDetailsUIState>()
     override val uiStateObservable:Observable<MoreDetailsUIState> = onUIStateSubject
@@ -29,7 +29,7 @@ class PresenterImpl(private val artistRepository: Repository, private val format
     }
 
     private fun displayArtistInfo(artistName: String) {
-        val artistInfoCards = artistRepository.getArtistInfo(artistName)
+        val artistInfoCards = artistCardsRepository.getArtistInfo(artistName)
         val formattedCards = formatArtistCards(artistInfoCards, artistName)
         updateUIState(formattedCards)
         onUIStateSubject.notify(uiState)

@@ -5,7 +5,7 @@ import org.junit.Test
 
 internal class  CardDescriptionFormatterHtmlTest {
 
-   private val artistdescriptionformat by lazy {ArtistDescriptionFormatterHtml()}
+   private val artistdescriptionformat by lazy {CardDescriptionFormatterHtml()}
 
     @Test
     fun `given a locally stored wikipedia artist it should return the format description`() {
