@@ -29,7 +29,7 @@ internal class MoreDetailsPresenterImpl(private val artistCardsRepository: Cards
     }
 
     private fun displayArtistInfo(artistName: String) {
-        val artistInfoCards = artistCardsRepository.getArtistInfo(artistName)
+        val artistInfoCards = artistCardsRepository.getArtistCards(artistName)
         val formattedCards = formatArtistCards(artistInfoCards, artistName)
         updateUIState(formattedCards)
         onUIStateSubject.notify(uiState)
@@ -39,8 +39,8 @@ internal class MoreDetailsPresenterImpl(private val artistCardsRepository: Cards
         uiState = uiState.copy(cards = cards)
     }
 
-    private fun formatArtistCards(cardArtists: Collection<CardArtist>, artistName: String): List<UICard> {
-        val formattedCards: Collection<UICard>
+    private fun formatArtistCards(cardArtists: List<CardArtist>, artistName: String): List<UICard> {
+        val formattedCards: List<UICard>
         if(cardArtists.isEmpty()){
             val emptyCard = UICard("", "", EMPTY_CARD_IMAGE_URL, NO_RESULT_MESSAGE)
             formattedCards = listOf(emptyCard)

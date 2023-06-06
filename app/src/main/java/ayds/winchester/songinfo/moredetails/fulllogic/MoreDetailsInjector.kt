@@ -8,7 +8,7 @@ import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.Card
 import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys.LastFMProxy
 import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys.NewYorkTimesProxy
 import ayds.winchester.songinfo.moredetails.fulllogic.data.externalServices.proxys.WikipediaProxy
-import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqldb.artistCardStorageImpl
+import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqldb.ArtistCardStorageImpl
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqldb.CursorToArtistMapper
 import ayds.winchester.songinfo.moredetails.fulllogic.data.localArtistInfo.sqldb.CursorToArtistMapperImpl
 import ayds.winchester.songinfo.moredetails.fulllogic.presentation.presenter.CardDescriptionFormatterHtml
@@ -28,7 +28,7 @@ object MoreDetailsInjector {
         brokerService.addProxy(LastFMProxy(LastFmInjector.getService()))
         brokerService.addProxy(NewYorkTimesProxy(newYorkTimesArtistInfoServiceImpl))
 
-        val artistLocalStorage = artistCardStorageImpl(moreDetailsView as Context, cursorArtistMapper)
+        val artistLocalStorage = ArtistCardStorageImpl(moreDetailsView as Context, cursorArtistMapper)
         val repository = CardsRepositoryImpl(artistLocalStorage, brokerService)
         val presenter = MoreDetailsPresenterImpl(repository, artistDescriptionFormatter)
         moreDetailsView.setPresenter(presenter)

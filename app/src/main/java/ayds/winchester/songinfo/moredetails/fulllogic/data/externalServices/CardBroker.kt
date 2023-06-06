@@ -19,7 +19,7 @@ internal class CardBrokerImpl:CardBroker{
     override fun getArtistFromExternalServices(artistName: String): List<CardArtist> {
         val collectionCardArtists = mutableListOf<CardArtist>()
         proxyServices.forEach {
-            it.getArtistInfo(artistName)?.let {
+            it.getCard(artistName)?.let {
                     card -> collectionCardArtists.add(card)
             }
         }

@@ -24,7 +24,7 @@ internal class CardsRepositoryTest {
         val card = CardArtist(name = artistName, infoURL = "wikiUrl", description = "desc")
         every { artistCardStorage.getArtistCards(artistName) } returns card
 
-        val result = artistCardsRepository.getArtistInfo(artistName)
+        val result = artistCardsRepository.getArtistCards(artistName)
 
         assertEquals(card, result)
         assertTrue(card.isLocallyStored)
@@ -37,7 +37,7 @@ internal class CardsRepositoryTest {
         every { artistCardStorage.getArtistCards(artistName) } returns null
         every { wikipediaService.getArtist(artistName) } returns card
 
-        val result = artistCardsRepository.getArtistInfo(artistName)
+        val result = artistCardsRepository.getArtistCards(artistName)
 
         assertEquals(card, result)
         verify { artistCardStorage.saveCards(card) }
@@ -50,7 +50,7 @@ internal class CardsRepositoryTest {
         every { artistCardStorage.getArtistCards(artistName) } returns null
         every { wikipediaService.getArtist(artistName) } returns null
 
-        val result = artistCardsRepository.getArtistInfo(artistName)
+        val result = artistCardsRepository.getArtistCards(artistName)
 
         assertEquals(null, result)
         verify(exactly = 0) { artistCardStorage.saveCards(any()) }
@@ -62,7 +62,7 @@ internal class CardsRepositoryTest {
         every { artistCardStorage.getArtistCards(artistName) } returns null
         every { wikipediaService.getArtist(artistName) } throws mockk<IOException>()
 
-        val result = artistCardsRepository.getArtistInfo(artistName)
+        val result = artistCardsRepository.getArtistCards(artistName)
 
         assertEquals(null, result)
         verify(exactly = 0) { artistCardStorage.saveCards(any()) }

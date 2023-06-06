@@ -7,17 +7,17 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 
 internal class CardsRepositoryImpl(
     private val artistCardStorage : ArtistCardStorage,
-    private val cardBroker: CardBroker
+    private val cardsBroker: CardBroker
 ): CardsRepository {
 
-    override fun getArtistInfo(artistName: String): List<CardArtist> {
+    override fun getArtistCards(artistName: String): List<CardArtist> {
         var artistCardsInfo = artistCardStorage.getArtistCards(artistName)
         when {
             artistCardsInfo.isNotEmpty() -> artistCardsInfo.map { artistCardInfo ->
                 artistCardInfo.markArtistAsLocal()
             }
             else -> {
-                artistCardsInfo = cardBroker.getArtistFromExternalServices(artistName)
+                artistCardsInfo = cardsBroker.getArtistFromExternalServices(artistName)
                 artistCardsInfo.forEach{ artistCard ->
                     artistCardStorage.saveCards(artistCard, artistName)
                 }

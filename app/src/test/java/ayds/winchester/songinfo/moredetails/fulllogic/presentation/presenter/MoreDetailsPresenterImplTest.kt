@@ -23,7 +23,7 @@ internal class MoreDetailsPresenterImplTest {
         val artistName = "Artist Name"
         val card=CardArtist(infoURL = "wikiUrl", description = "")
         val formattedDescription = "Description"
-        every { artistCardsRepository.getArtistInfo(artistName) } returns card
+        every { artistCardsRepository.getArtistCards(artistName) } returns card
         every { formatter.formatDescription(card) } returns formattedDescription
         val artistTester: (MoreDetailsUIState) -> Unit = mockk(relaxed = true)
         moreDetailsPresenter.uiStateObservable.subscribe{

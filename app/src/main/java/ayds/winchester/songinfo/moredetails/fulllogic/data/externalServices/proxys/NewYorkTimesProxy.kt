@@ -5,13 +5,18 @@ import ayds.ny3.newyorktimes.external.NYT_LOGO_URL
 import ayds.ny3.newyorktimes.external.NYTimesArtistInfoService
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.Source
+import java.io.IOException
 
 class NewYorkTimesProxy(
     private val newYorkTimesService: NYTimesArtistInfoService
 ): ProxyService {
 
-    override fun getArtistInfo(artistName: String):CardArtist?=
-        newYorkTimesService.getArtistInfo(artistName)?.mapNYTimesArtist()
+    override fun getCard(artistName: String):CardArtist?=
+        try {
+            newYorkTimesService.getArtistInfo(artistName)?.mapNYTimesArtist()
+        } catch (e1: IOException) {
+            null
+        }
 
     private fun NYTArtistInfo?.mapNYTimesArtist():CardArtist?=
         this?.let {

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ayds.winchester.songinfo.R
 import com.squareup.picasso.Picasso
 
-class ArtistViewPagerAdapter(private val artistCards: Collection<UICard>, private val activity: AppCompatActivity) : RecyclerView.Adapter<ArtistCardViewHolder>(){
+class ArtistViewPagerAdapter(private val artistCards: List<UICard>, private val activity: AppCompatActivity) : RecyclerView.Adapter<ArtistCardViewHolder>(){
 
     override fun getItemCount() = artistCards.size
 

@@ -10,7 +10,7 @@ import ayds.winchester.songinfo.moredetails.fulllogic.domain.entities.CardArtist
 private const val DATABASE_NAME="dictionary.db"
 private const val DATABASE_VERSION= 1
 
-class artistCardStorageImpl(context: Context?, private val cursorToArtistMapper: CursorToArtistMapper ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), ArtistCardStorage{
+class ArtistCardStorageImpl(context: Context?, private val cursorToArtistMapper: CursorToArtistMapper ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION), ArtistCardStorage{
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(createArtistInfoTableQuery)
     }
