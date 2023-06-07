@@ -11,7 +11,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.lang.Exception
 
-class SongRepositoryTest {
+class SongCardsRepositoryTest {
 
     private val spotifyLocalStorage: SpotifyLocalStorage = mockk(relaxUnitFun = true)
     private val spotifyTrackService: SpotifyTrackService = mockk(relaxUnitFun = true)
