@@ -35,7 +35,7 @@ internal class MoreDetailsPresenterImpl(private val artistCardsRepository: Cards
         onUIStateSubject.notify(uiState)
     }
 
-    private fun updateUIState(cards: Collection<UICard>) {
+    private fun updateUIState(cards: List<UICard>) {
         uiState = uiState.copy(cards = cards)
     }
 
